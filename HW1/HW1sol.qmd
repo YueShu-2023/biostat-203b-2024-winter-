@@ -41,11 +41,16 @@ sessionInfo()
 
 5. After this course, you can make this repository public and use it to demonstrate your skill sets on job market.
 
+**Answer:** This is my repository for this course:<https://github.com/YueShu-2023/biostat-203b-2024-winter->
+
 ## Q2. Data ethics training
 
 This exercise (and later in this course) uses the [MIMIC-IV data v2.2](https://physionet.org/content/mimiciv/2.2/), a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Follow the instructions at <https://mimic.mit.edu/docs/gettingstarted/> to (1) complete the CITI `Data or Specimens Only Research` course and (2) obtain the PhysioNet credential for using the MIMIC-IV data. Display the verification links to your completion report and completion certificate here. **You must complete Q2 before working on the remaining questions.** (Hint: The CITI training takes a few hours and the PhysioNet credentialing takes a couple days; do not leave it to the last minute.)
 
-
+**Answer:** This is my completion report: 
+<https://www.citiprogram.org/verify/?k2dca7a9c-3a4b-43d1-8efa-a6adaf8f112c-60370451>. 
+This is my completion certificate: 
+<https://www.citiprogram.org/verify/?w620cc066-80b7-4bb2-acf1-7c4b5a30266e-60370451>.
 
 ## Q3. Linux Shell Commands
 
