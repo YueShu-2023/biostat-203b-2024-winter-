@@ -163,7 +163,7 @@ do
   grep -o -i "$char" pg42671.txt | wc -l
 done
 ```
-wget -nc means that if the file already exists, it will not be downloaded again. 
+It is Elizabeth. wget -nc means that if the file already exists, it will not be downloaded again. 
 
 2. What's the difference between the following two commands?
 ```{bash}
@@ -194,11 +194,17 @@ Using `chmod` to make the file executable by the owner, and run
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
 
  **Answer:**
-The output is the 5 lines from the 20th line of the file. `"$1"` means the first argument, `"$2"` means the second argument, and `"$3"` means the third argument. We need the first line of the shell script because it is the shebang line, which tells the system which interpreter to use to execute the script.
+The output is the 5 lines from the 16th to 20th line of the file. `"$1"` means the pg42671.txt, `"$2"` means the 20th line, and `"$3"` means last fifrh line. We need the first line of the shell script because it tells the system which interpreter to use to execute the script.
 
 ## Q5. More fun with Linux
 
 Try following commands in Bash and interpret the results: `cal`, `cal 2024`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
+
+ **Answer:**
+```{bash}
+
+
+```
 
 ## Q6. Book
 
