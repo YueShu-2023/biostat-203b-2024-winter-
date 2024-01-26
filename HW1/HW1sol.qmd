@@ -202,9 +202,26 @@ Try following commands in Bash and interpret the results: `cal`, `cal 2024`, `ca
 
  **Answer:**
 ```{bash}
-
-
+cal
+cal 2024
+cal 9 1752
+date
+hostname
+arch
+uname -a
+uptime
+who am i
+who
+w
+id
+last | head
+echo {con,pre}{sent,fer}{s,ed}
+time sleep 5
+history | tail
 ```
+`cal` shows the calendar of the current month. `cal 2024` shows the calendar of the year 2024. `cal 9 1752` shows the calendar of the year 1752. It is unusual because the calendar of September 1752 is different from the calendar of September 2024. `date` shows the current date and time. 
+`hostname` shows the name of the host. `arch` shows the machine hardware name. `uname -a` shows the kernel name, network node hostname, kernel release, kernel version, machine hardware name, and processor type. `uptime` shows the current time, how long the system has been running, how many users are currently logged on, and the system load averages for the past 1, 5, and 15 minutes. 
+`who am i` shows the current user. `who` shows the current users. `w` shows the current users and what they are doing. `id` shows the current user's identity. `last | head` shows the last logged in users. `echo {con,pre}{sent,fer}{s,ed}` shows the words "consents", "confer", "consented", "conferred", "presents", "prefer", "presented", and "preferred". `time sleep 5` shows the time of running the command "sleep 5". `history | tail` shows the last 10 commands.
 
 ## Q6. Book
 

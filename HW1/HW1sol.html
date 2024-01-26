@@ -3154,29 +3154,29 @@ vertical-align: -.125em;
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> ~/mimic/hosp</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> ~/mimic/icu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>total 8992352
--rw-r--r--@ 1 shu  staff    15516088 Jan  5  2023 admissions.csv.gz
--rw-r--r--@ 1 shu  staff      427468 Jan  5  2023 d_hcpcs.csv.gz
--rw-r--r--@ 1 shu  staff      859438 Jan  5  2023 d_icd_diagnoses.csv.gz
--rw-r--r--@ 1 shu  staff      578517 Jan  5  2023 d_icd_procedures.csv.gz
--rw-r--r--@ 1 shu  staff       12900 Jan  5  2023 d_labitems.csv.gz
--rw-r--r--@ 1 shu  staff    25070720 Jan  5  2023 diagnoses_icd.csv.gz
--rw-r--r--@ 1 shu  staff     7426955 Jan  5  2023 drgcodes.csv.gz
--rw-r--r--@ 1 shu  staff   508524623 Jan  5  2023 emar.csv.gz
--rw-r--r--@ 1 shu  staff   471096030 Jan  5  2023 emar_detail.csv.gz
--rw-r--r--@ 1 shu  staff     1767138 Jan  5  2023 hcpcsevents.csv.gz
--rw-r--r--@ 1 shu  staff  1939088924 Jan  5  2023 labevents.csv.gz
--rw-r--r--@ 1 shu  staff    96698496 Jan  5  2023 microbiologyevents.csv.gz
--rw-r--r--@ 1 shu  staff    36124944 Jan  5  2023 omr.csv.gz
--rw-r--r--@ 1 shu  staff     2312631 Jan  5  2023 patients.csv.gz
--rw-r--r--@ 1 shu  staff   398753125 Jan  5  2023 pharmacy.csv.gz
--rw-r--r--@ 1 shu  staff   498505135 Jan  5  2023 poe.csv.gz
--rw-r--r--@ 1 shu  staff    25477219 Jan  5  2023 poe_detail.csv.gz
--rw-r--r--@ 1 shu  staff   458817415 Jan  5  2023 prescriptions.csv.gz
--rw-r--r--@ 1 shu  staff     6027067 Jan  5  2023 procedures_icd.csv.gz
--rw-r--r--@ 1 shu  staff      122507 Jan  5  2023 provider.csv.gz
--rw-r--r--@ 1 shu  staff     6781247 Jan  5  2023 services.csv.gz
--rw-r--r--@ 1 shu  staff    36158338 Jan  5  2023 transfers.csv.gz
+<pre><code>total 31951376
+-rw-r--r--@ 1 shu  staff     15516088 Jan  5  2023 admissions.csv.gz
+-rw-r--r--@ 1 shu  staff       427468 Jan  5  2023 d_hcpcs.csv.gz
+-rw-r--r--@ 1 shu  staff       859438 Jan  5  2023 d_icd_diagnoses.csv.gz
+-rw-r--r--@ 1 shu  staff       578517 Jan  5  2023 d_icd_procedures.csv.gz
+-rw-r--r--@ 1 shu  staff        12900 Jan  5  2023 d_labitems.csv.gz
+-rw-r--r--@ 1 shu  staff     25070720 Jan  5  2023 diagnoses_icd.csv.gz
+-rw-r--r--@ 1 shu  staff      7426955 Jan  5  2023 drgcodes.csv.gz
+-rw-r--r--@ 1 shu  staff    508524623 Jan  5  2023 emar.csv.gz
+-rw-r--r--@ 1 shu  staff    471096030 Jan  5  2023 emar_detail.csv.gz
+-rw-r--r--@ 1 shu  staff      1767138 Jan  5  2023 hcpcsevents.csv.gz
+-rw-r--r--@ 1 shu  staff  13730083993 Jan  5  2023 labevents.csv
+-rw-r--r--@ 1 shu  staff     96698496 Jan  5  2023 microbiologyevents.csv.gz
+-rw-r--r--@ 1 shu  staff     36124944 Jan  5  2023 omr.csv.gz
+-rw-r--r--@ 1 shu  staff      2312631 Jan  5  2023 patients.csv.gz
+-rw-r--r--@ 1 shu  staff    398753125 Jan  5  2023 pharmacy.csv.gz
+-rw-r--r--@ 1 shu  staff    498505135 Jan  5  2023 poe.csv.gz
+-rw-r--r--@ 1 shu  staff     25477219 Jan  5  2023 poe_detail.csv.gz
+-rw-r--r--@ 1 shu  staff    458817415 Jan  5  2023 prescriptions.csv.gz
+-rw-r--r--@ 1 shu  staff      6027067 Jan  5  2023 procedures_icd.csv.gz
+-rw-r--r--@ 1 shu  staff       122507 Jan  5  2023 provider.csv.gz
+-rw-r--r--@ 1 shu  staff      6781247 Jan  5  2023 services.csv.gz
+-rw-r--r--@ 1 shu  staff     36158338 Jan  5  2023 transfers.csv.gz
 total 6155968
 -rw-r--r--@ 1 shu  staff       35893 Jan  5  2023 caregiver.csv.gz
 -rw-r--r--@ 1 shu  staff  2467761053 Jan  5  2023 chartevents.csv.gz
@@ -3214,8 +3214,9 @@ total 6155968
 <div class="cell-output cell-output-stdout">
 <pre><code>/Users/shu/mimic/hosp/admissions.csv.gz:
   431232
-/Users/shu/mimic/hosp/labevents.csv.gz:
- 118171368
+/Users/shu/mimic/hosp/l*.gz:
+bash: line 3: /Users/shu/mimic/hosp/l*.gz: No such file or directory
+       0
 /Users/shu/mimic/hosp/patients.csv.gz:
   299713</code></pre>
 </div>
@@ -3334,12 +3335,13 @@ total 6155968
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> ~/mimic/hosp/labevents.csv.gz</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> zcat <span class="op">&lt;</span> ~/mimic/hosp/labevents.csv.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>-rw-r--r--@ 1 shu  staff   1.8G Jan  5  2023 /Users/shu/mimic/hosp/labevents.csv.gz
- 118171368
+<pre><code>ls: /Users/shu/mimic/hosp/labevents.csv.gz: No such file or directory
+bash: line 2: /Users/shu/mimic/hosp/labevents.csv.gz: No such file or directory
+       0
 
-real    0m27.926s
-user    0m35.345s
-sys 0m3.486s</code></pre>
+real    0m0.005s
+user    0m0.001s
+sys 0m0.003s</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -3347,11 +3349,12 @@ sys 0m3.486s</code></pre>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-d</span> ~/mimic/hosp/labevents.csv.gz</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> wc <span class="at">-l</span> <span class="op">&lt;</span> ~/mimic/hosp/labevents.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> 118171368
+<pre><code>gzip: can&#39;t stat: /Users/shu/mimic/hosp/labevents.csv.gz (/Users/shu/mimic/hosp/labevents.csv.gz.gz): No such file or directory
+ 118171368
 
-real    0m19.825s
-user    0m8.358s
-sys 0m5.041s</code></pre>
+real    0m20.842s
+user    0m8.363s
+sys 0m5.152s</code></pre>
 </div>
 </div>
 <p>As we can see, the compressed file size is less than 1G, and the uncompressed file size is 1.8G. The run time of <code>zcat &lt; ~/mimic/labevents.csv.gz | wc -l</code> is 28s, and the run time of <code>wc -l labevents.csv</code> is 18s. The trade off between storage and speed for big data files is that the compressed file size is smaller than the uncompressed file size, but the run time of the compressed file is longer than the uncompressed file.</p>
@@ -3374,7 +3377,7 @@ sys 0m5.041s</code></pre>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span> <span class="at">-o</span> <span class="at">-i</span> <span class="st">&quot;</span><span class="va">$char</span><span class="st">&quot;</span> pg42671.txt <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>wget -nc means that if the file already exists, it will not be downloaded again.</p>
+<p>It is Elizabeth. wget -nc means that if the file already exists, it will not be downloaded again.</p>
 <ol start="2" type="1">
 <li>What’s the difference between the following two commands?</li>
 </ol>
@@ -3406,7 +3409,104 @@ sys 0m5.041s</code></pre>
 <h2 class="anchored" data-anchor-id="q5.-more-fun-with-linux">Q5. More fun with Linux</h2>
 <p>Try following commands in Bash and interpret the results: <code>cal</code>, <code>cal 2024</code>, <code>cal 9 1752</code> (anything unusual?), <code>date</code>, <code>hostname</code>, <code>arch</code>, <code>uname -a</code>, <code>uptime</code>, <code>who am i</code>, <code>who</code>, <code>w</code>, <code>id</code>, <code>last | head</code>, <code>echo {con,pre}{sent,fer}{s,ed}</code>, <code>time sleep 5</code>, <code>history | tail</code>.</p>
 <p><strong>Answer:</strong></p>
-<p>···</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cal</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cal</span> 2024</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cal</span> 9 1752</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hostname</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">arch</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">uname</span> <span class="at">-a</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">uptime</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="fu">who</span> am i</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">who</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="fu">w</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="fu">last</span> <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">{con</span><span class="op">,</span><span class="dt">pre}{sent</span><span class="op">,</span><span class="dt">fer}{s</span><span class="op">,</span><span class="dt">ed}</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> sleep 5</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="bu">history</span> <span class="kw">|</span> <span class="fu">tail</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    January 2024      
+Su Mo Tu We Th Fr Sa  
+    1  2  3  4  5  6  
+ 7  8  9 10 11 12 13  
+14 15 16 17 18 19 20  
+21 22 23 24 25 _2_6 27  
+28 29 30 31           
+                      
+                            2024
+      January               February               March          
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  
+    1  2  3  4  5  6               1  2  3                  1  2  
+ 7  8  9 10 11 12 13   4  5  6  7  8  9 10   3  4  5  6  7  8  9  
+14 15 16 17 18 19 20  11 12 13 14 15 16 17  10 11 12 13 14 15 16  
+21 22 23 24 25 _2_6 27  18 19 20 21 22 23 24  17 18 19 20 21 22 23  
+28 29 30 31           25 26 27 28 29        24 25 26 27 28 29 30  
+                                            31                    
+
+       April                  May                   June          
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  
+    1  2  3  4  5  6            1  2  3  4                     1  
+ 7  8  9 10 11 12 13   5  6  7  8  9 10 11   2  3  4  5  6  7  8  
+14 15 16 17 18 19 20  12 13 14 15 16 17 18   9 10 11 12 13 14 15  
+21 22 23 24 25 26 27  19 20 21 22 23 24 25  16 17 18 19 20 21 22  
+28 29 30              26 27 28 29 30 31     23 24 25 26 27 28 29  
+                                            30                    
+
+        July                 August              September        
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  
+    1  2  3  4  5  6               1  2  3   1  2  3  4  5  6  7  
+ 7  8  9 10 11 12 13   4  5  6  7  8  9 10   8  9 10 11 12 13 14  
+14 15 16 17 18 19 20  11 12 13 14 15 16 17  15 16 17 18 19 20 21  
+21 22 23 24 25 26 27  18 19 20 21 22 23 24  22 23 24 25 26 27 28  
+28 29 30 31           25 26 27 28 29 30 31  29 30                 
+                                                                  
+
+      October               November              December        
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  
+       1  2  3  4  5                  1  2   1  2  3  4  5  6  7  
+ 6  7  8  9 10 11 12   3  4  5  6  7  8  9   8  9 10 11 12 13 14  
+13 14 15 16 17 18 19  10 11 12 13 14 15 16  15 16 17 18 19 20 21  
+20 21 22 23 24 25 26  17 18 19 20 21 22 23  22 23 24 25 26 27 28  
+27 28 29 30 31        24 25 26 27 28 29 30  29 30 31              
+                                                                  
+   September 1752     
+Su Mo Tu We Th Fr Sa  
+       1  2 14 15 16  
+17 18 19 20 21 22 23  
+24 25 26 27 28 29 30  
+                      
+                      
+                      
+Fri Jan 26 01:08:10 PST 2024
+YyyyyydeMBP.lan
+i386Darwin YyyyyydeMBP.lan 22.5.0 Darwin Kernel Version 22.5.0: Thu Jun  8 22:22:22 PDT 2023; root:xnu-8796.121.3~7/RELEASE_X86_64 x86_64
+ 1:08  up 7 days,  1:38, 1 user, load averages: 2.70 2.61 2.74
+shu                           Jan 26 01:08 
+shu              console      Jan 18 23:28 
+ 1:08  up 7 days,  1:38, 1 user, load averages: 2.70 2.61 2.74
+USER     TTY      FROM              LOGIN@  IDLE WHAT
+shu      console  -                18Jan24 7days -
+uid=501(shu) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts),79(_appserverusr),80(admin),81(_appserveradm),98(_lpadmin),33(_appstore),100(_lpoperator),204(_developer),250(_analyticsusers),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh),400(com.apple.access_remote_ae),701(com.apple.sharepoint.group.1)
+shu       ttys000                   Thu Jan 25 18:23 - 18:23  (00:00)
+shu       console                   Thu Jan 18 23:28   still logged in
+reboot    ~                         Thu Jan 18 23:27 
+shutdown  ~                         Thu Jan 18 23:15 
+shu       ttys001                   Mon Jan 15 17:29 - 17:29  (00:00)
+shu       ttys000                   Mon Jan  8 13:10 - 13:10  (00:00)
+shu       ttys000                   Sun Jan  7 14:27 - 14:27  (00:00)
+shu       ttys000                   Sun Jan  7 09:57 - 09:57  (00:00)
+shu       ttys001                   Sun Jan  7 08:34 - 08:34  (00:00)
+shu       ttys000                   Sun Jan  7 08:31 - 08:31  (00:00)
+consents consented confers confered presents presented prefers prefered
+
+real    0m5.007s
+user    0m0.001s
+sys 0m0.002s</code></pre>
+</div>
+</div>
+<p><code>cal</code> shows the calendar of the current month. <code>cal 2024</code> shows the calendar of the year 2024. <code>cal 9 1752</code> shows the calendar of the year 1752. It is unusual because the calendar of September 1752 is different from the calendar of September 2024. <code>date</code> shows the current date and time. <code>hostname</code> shows the name of the host. <code>arch</code> shows the machine hardware name. <code>uname -a</code> shows the kernel name, network node hostname, kernel release, kernel version, machine hardware name, and processor type. <code>uptime</code> shows the current time, how long the system has been running, how many users are currently logged on, and the system load averages for the past 1, 5, and 15 minutes. <code>who am i</code> shows the current user. <code>who</code> shows the current users. <code>w</code> shows the current users and what they are doing. <code>id</code> shows the current user’s identity. <code>last | head</code> shows the last logged in users. <code>echo {con,pre}{sent,fer}{s,ed}</code> shows the words “consents”, “confer”, “consented”, “conferred”, “presents”, “prefer”, “presented”, and “preferred”. <code>time sleep 5</code> shows the time of running the command “sleep 5”. <code>history | tail</code> shows the last 10 commands.</p>
 </section>
 <section id="q6.-book" class="level2">
 <h2 class="anchored" data-anchor-id="q6.-book">Q6. Book</h2>
