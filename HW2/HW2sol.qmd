@@ -68,11 +68,13 @@ Which function is fastest? Is there difference in the (default) parsed data type
 system.time({df_base_r <- read.csv("~/mimic/hosp/admissions.csv.gz")})
 system.time({df_tidyverse = read_csv("~/mimic/hosp/admissions.csv.gz")})
 system.time({df_data_table = fread("~/mimic/hosp/admissions.csv.gz")})
-
+```
+```{r}
 object_size(df_base_r)
 object_size(df_tidyverse)
 object_size(df_data_table)
-
+```
+```{r}
 str(df_base_r)
 str(df_tidyverse)
 str(df_data_table)
@@ -82,6 +84,32 @@ Based on these results, fread from the data.table package appears to be the fast
 ### Q1.2 User-supplied data types
 
 Re-ingest `admissions.csv.gz` by indicating appropriate column data types in `read_csv`. Does the run time change? How much memory does the result tibble use? (Hint: `col_types` argument in `read_csv`.)
+
+**Answer:**
+```{r}
+column_types <- cols(
+  subject_id = col_integer(),
+  hadm_id = col_integer(),
+  admittime = col_datetime(format = ""),
+  dischtime = col_datetime(format = ""),
+  deathtime = col_datetime(format = ""),
+  admission_type = col_character(),
+  admit_provider_id = col_character(),
+  admission_location = col_character(),
+  discharge_location = col_character(),
+  insurance = col_character(),
+  language = col_character(),
+  marital_status = col_character(),
+  race = col_character(),
+  edregtime = col_datetime(format = ""),
+  edouttime = col_datetime(format = ""),
+  hospital_expire_flag = col_integer()
+)
+system.time({df_tidyverse1 = read_csv("~/mimic/hosp/admissions.csv.gz",col_types = column_types)})
+object_size(df_tidyverse1)
+```
+This shows less time is spent, and the memory usage is also less than the previous one.
+
 
 ## Q2. Ingest big data files
 
