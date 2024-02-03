@@ -147,8 +147,9 @@ Try to ingest only columns `subject_id`, `itemid`, `charttime`, and `valuenum` i
 **Answer:**
 ```{r}
 system.time({df_labevents_selected = read_csv("~/mimic/hosp/labevents.csv.gz", col_select = c("subject_id", "itemid", "charttime", "valuenum"))})
-
 ```
+This process takes too long to complete, so I aborted the program. My R studio restarted after I aborted the program.
+
 ### Q2.3 Ingest subset of `labevents.csv.gz`
 
 <p align="center">
@@ -160,6 +161,11 @@ Our first strategy to handle this big data file is to make a subset of the `labe
 In later exercises, we will only be interested in the following lab items: creatinine (50912), potassium (50971), sodium (50983), chloride (50902), bicarbonate (50882), hematocrit (51221), white blood cell count (51301), and glucose (50931) and the following columns: `subject_id`, `itemid`, `charttime`, `valuenum`. Write a Bash command to extract these columns and rows from `labevents.csv.gz` and save the result to a new file `labevents_filtered.csv.gz` in the current working directory. (Hint: use `zcat <` to pipe the output of `labevents.csv.gz` to `awk` and then to `gzip` to compress the output. To save render time, put `#| eval: false` at the beginning of this code chunk.)
 
 Display the first 10 lines of the new file `labevents_filtered.csv.gz`. How many lines are in this new file? How long does it take `read_csv` to ingest `labevents_filtered.csv.gz`?
+
+**Answer:**
+```{bash}
+
+```
 
 ### Q2.4 Ingest `labevents.csv` by Apache Arrow
 
