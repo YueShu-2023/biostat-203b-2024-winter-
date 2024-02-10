@@ -164,7 +164,17 @@ Display the first 10 lines of the new file `labevents_filtered.csv.gz`. How many
 
 **Answer:**
 ```{bash}
+#| eval: false
+zcat > ~/mimic/hosp/labevents.csv.gz | awk -F ',' 'BEGIN {OFS=","}  ($5 == 50912 || $5 == 50971 || $5 == 50983 || $5 == 50902 || $5 == 50882 || $5 == 51221 || $5 == 51301 || $5 == 50931) && ($2 == "subject_id" || $5 == "itemid" || $7 == "charttime" || $10 == "valuenum") {print $2, $5, $7, $10}' | gzip > labevents_filtered.csv.gz
+```
 
+```{bash}
+zcat < ~/mimic/hosp/labevents_filtered.csv.gz | head -10
+zcat < ~/mimic/hosp/labevents_filtered.csv.gz | wc -l
+```
+
+```{r}
+system.time({df_labevents_filtered =read_csv("~/Users/shu/Downloads/203BHomework/HW2/labevents_filtered.csv.gz")})
 ```
 
 ### Q2.4 Ingest `labevents.csv` by Apache Arrow
@@ -179,6 +189,23 @@ Then use [`arrow::open_dataset`](https://arrow.apache.org/docs/r/reference/open_
 
 Write a few sentences to explain what is Apache Arrow. Imagine you want to explain it to a layman in an elevator. 
 
+**Answer:**
+```{bash}
+#| eval: false
+gzip -d ~/mimic/hosp/labevents.csv.gz
+mv ~/mimic/hosp/labevents.csv .
+```
+
+```{r}
+
+labevents_filtered <- arrow::open_dataset("labevents.csv", format = "csv") %>% 
+  dplyr::select(subject_id, itemid, charttime, valuenum) %>% 
+  dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931))
+system.time({labevents_filtered <- arrow::open_dataset("labevents.csv", format = "csv") %>% 
+  dplyr::select(subject_id, itemid, charttime, valuenum) %>% 
+  dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931))})
+
+```
 ### Q2.5 Compress `labevents.csv` to Parquet format and ingest/select/filter
 
 <p align="center">
