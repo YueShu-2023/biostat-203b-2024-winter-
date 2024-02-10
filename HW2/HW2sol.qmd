@@ -165,16 +165,17 @@ Display the first 10 lines of the new file `labevents_filtered.csv.gz`. How many
 **Answer:**
 ```{bash}
 #| eval: false
-zcat > ~/mimic/hosp/labevents.csv.gz | awk -F ',' 'BEGIN {OFS=","}  ($5 == 50912 || $5 == 50971 || $5 == 50983 || $5 == 50902 || $5 == 50882 || $5 == 51221 || $5 == 51301 || $5 == 50931) && ($2 == "subject_id" || $5 == "itemid" || $7 == "charttime" || $10 == "valuenum") {print $2, $5, $7, $10}' | gzip > labevents_filtered.csv.gz
+zcat > ~/mimic/hosp/labevents.csv.gz | awk -F ',' 'BEGIN {OFS=","; print "subject_id,itemid,charttime,valuenum"}  ($5 == 50912 || $5 == 50971 || $5 == 50983 || $5 == 50902 || $5 == 50882 || $5 == 51221 || $5 == 51301 || $5 == 50931) {print $2, $5, $7, $10}' | gzip > ./labevents_filtered.csv.gz
 ```
 
 ```{bash}
-zcat < ~/mimic/hosp/labevents_filtered.csv.gz | head -10
-zcat < ~/mimic/hosp/labevents_filtered.csv.gz | wc -l
+zcat < ./labevents_filtered.csv.gz | head -10
+zcat < ./labevents_filtered.csv.gz | wc -l
 ```
+The number of lines is 24855909.
 
 ```{r}
-system.time({df_labevents_filtered =read_csv("~/Users/shu/Downloads/203BHomework/HW2/labevents_filtered.csv.gz")})
+system.time({df_labevents_filtered =read_csv("./labevents_filtered.csv.gz")})
 ```
 
 ### Q2.4 Ingest `labevents.csv` by Apache Arrow
@@ -253,9 +254,9 @@ end_time <- Sys.time()
 end_time - start_time
 nrow(labevents_duckdb)
 head(labevents_duckdb, 10)
-
 ```
 
+DuckDB is the librarian that helps you find and organize these books quickly and effectively. It stores your data in a way that makes it easy to search through and retrieve information, even when you have a massive amount of data. DuckDB is designed to handle large datasets with lightning-fast speed, making it a powerful tool for analyzing and querying data.
 
 ## Q3. Ingest and filter `chartevents.csv.gz`
 
@@ -270,3 +271,23 @@ zcat < ~/mimic/icu/d_items.csv.gz | head -10
 In later exercises, we are interested in the vitals for ICU patients: heart rate (220045), mean non-invasive blood pressure (220181), systolic non-invasive blood pressure (220179), body temperature in Fahrenheit (223761), and respiratory rate (220210). Retrieve a subset of `chartevents.csv.gz` only containing these items, using the favorite method you learnt in Q2. 
 
 Document the steps and show code. Display the number of rows and the first 10 rows of the result tibble.
+
+**Answer:**
+```{bash}
+#| eval: false
+# Extract the chartevents.csv.gz file
+gzip -d ~/mimic/icu/chartevents.csv.gz
+mv ~/mimic/icu/chartevents.csv .
+```
+
+```{r}
+# Read the chartevents.csv file
+chartevents_filtered <- arrow::open_dataset("chartevents.csv", format = "csv") %>% 
+  dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931))
+# Display the time
+system.time({chartevents_filtered <- arrow::open_dataset("chartevents.csv", format = "csv") %>% 
+  dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931))})
+# Display the number of rows and the first 10 rows of the result tibble
+nrow(chartevents_filtered)
+head(chartevents_filtered, 10)
+```
