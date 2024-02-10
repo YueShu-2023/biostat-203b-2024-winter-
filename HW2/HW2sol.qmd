@@ -197,15 +197,18 @@ mv ~/mimic/hosp/labevents.csv .
 ```
 
 ```{r}
-
 labevents_filtered <- arrow::open_dataset("labevents.csv", format = "csv") %>% 
   dplyr::select(subject_id, itemid, charttime, valuenum) %>% 
   dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931))
 system.time({labevents_filtered <- arrow::open_dataset("labevents.csv", format = "csv") %>% 
   dplyr::select(subject_id, itemid, charttime, valuenum) %>% 
   dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931))})
-
+nrow(labevents_filtered)
+head(labevents_filtered, 10)
 ```
+
+Apache Arrow is like a universal translator for data in the computing world. It is a cross-language development platform, organized for efficient analytic operations on modern hardware. It also provides libraries for building data systems and applications. Apache Arrow makes it easier and faster for different computer programs to talk to each other and share data.
+
 ### Q2.5 Compress `labevents.csv` to Parquet format and ingest/select/filter
 
 <p align="center">
@@ -215,6 +218,17 @@ system.time({labevents_filtered <- arrow::open_dataset("labevents.csv", format =
 Re-write the csv file `labevents.csv` in the binary Parquet format (Hint: [`arrow::write_dataset`](https://arrow.apache.org/docs/r/reference/write_dataset.html).) How large is the Parquet file(s)? How long does the ingest+select+filter process of the Parquet file(s) take? Display the number of rows and the first 10 rows of the result tibble and make sure they match those in Q2.3. (Hint: use `dplyr` verbs for selecting columns and filtering rows.)
 
 Write a few sentences to explain what is the Parquet format. Imagine you want to explain it to a layman in an elevator.
+
+**Answer:**
+```{r}
+arrow::write_dataset(arrow::open_dataset("labevents.csv", format = "csv"), "~/Users/shu/Downloads/203BHomework/HW2/labevents.parquet", format = "parquet")
+object_size("~/Users/shu/Downloads/203BHomework/HW2/labevents.parquet")
+system.time({labevents_parquet <- arrow::open_dataset("~/Users/shu/Downloads/203BHomework/HW2/labevents.parquet") %>% 
+  dplyr::select(subject_id, itemid, charttime, valuenum) %>% 
+  dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931))})
+nrow(labevents_parquet)
+head(labevents_parquet, 10)
+```
 
 ### Q2.6 DuckDB
 
