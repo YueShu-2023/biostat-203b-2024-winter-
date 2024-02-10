@@ -223,12 +223,14 @@ Write a few sentences to explain what is the Parquet format. Imagine you want to
 ```{r}
 arrow::write_dataset(arrow::open_dataset("labevents.csv", format = "csv"), "~/Users/shu/Downloads/203BHomework/HW2/labevents.parquet", format = "parquet")
 object_size("~/Users/shu/Downloads/203BHomework/HW2/labevents.parquet")
-system.time({labevents_parquet <- arrow::open_dataset("~/Users/shu/Downloads/203BHomework/HW2/labevents.parquet") %>% 
+system.time({labevents_parquet2 <- arrow::open_dataset("~/Users/shu/Downloads/203BHomework/HW2/labevents.parquet") %>% 
   dplyr::select(subject_id, itemid, charttime, valuenum) %>% 
   dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931))})
-nrow(labevents_parquet)
-head(labevents_parquet, 10)
+nrow(labevents_parquet2)
+head(labevents_parquet2, 10)
 ```
+
+Parquet format organizes data into columns and rows in a very efficient manner. That's like organizing your closet. It is a columnar storage format, which means that it stores data in columns rather than in rows. This makes it easier to read and write data, and it also makes it easier to compress and decompress data. This means you can fit more clothes (or data) into the closet without it getting too crowded or slow to access. Parquet format is very popular in the big data world because it is very efficient and it can handle very large amounts of data.
 
 ### Q2.6 DuckDB
 
@@ -239,6 +241,21 @@ head(labevents_parquet, 10)
 Ingest the Parquet file, convert it to a DuckDB table by [`arrow::to_duckdb`](https://arrow.apache.org/docs/r/reference/to_duckdb.html), select columns, and filter rows as in Q2.5. How long does the ingest+convert+select+filter process take? Display the number of rows and the first 10 rows of the result tibble and make sure they match those in Q2.3. (Hint: use `dplyr` verbs for selecting columns and filtering rows.)
 
 Write a few sentences to explain what is DuckDB. Imagine you want to explain it to a layman in an elevator.
+
+**Answer:**
+```{r}
+start_time <- Sys.time()
+labevents_duckdb <- arrow::open_dataset("~/Users/shu/Downloads/203BHomework/HW2/labevents.parquet") %>%
+    dplyr::select(subject_id, itemid, charttime, valuenum) %>%
+    dplyr::filter(itemid %in% c(50912, 50971, 50983, 50902, 50882, 51221, 51301, 50931)) 
+arrow::to_duckdb(labevents_duckdb,table = "labevents_duckdb")
+end_time <- Sys.time()
+end_time - start_time
+nrow(labevents_duckdb)
+head(labevents_duckdb, 10)
+
+```
+
 
 ## Q3. Ingest and filter `chartevents.csv.gz`
 
