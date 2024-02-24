@@ -12,7 +12,9 @@ format:
     toc-location: left
     code-fold: false
 execute:
-  eval: false    
+  eval: true    
+editor_options: 
+  chunk_output_type: inline
 ---
 
 Display machine information for reproducibility:
@@ -22,6 +24,8 @@ sessionInfo()
 
 Load necessary libraries (you can add more as needed).
 ```{r setup}
+library(readr)
+library(dplyr)
 library(arrow)
 library(gtsummary)
 library(memuse)
@@ -55,7 +59,6 @@ Hint: We need to pull information from data files `patients.csv.gz`, `admissions
 ```{r}
 
 # read in the data
-#| eval=True
 patients <- read_csv("~/mimic/hosp/patients.csv.gz")%>%
   filter(subject_id == 10013310)
 
@@ -63,12 +66,11 @@ admissions <- read_csv("~/mimic/hosp/admissions.csv.gz")%>%
   filter(subject_id == 10013310)%>%
   mutate(admittime = as.POSIXct(admittime),dischtime = as.POSIXct(dischtime))
 
-
 transfers <- read_csv("~/mimic/hosp/transfers.csv.gz")%>%
   filter(subject_id == 10013310)%>%
   mutate(intime = as.POSIXct(intime),outtime = as.POSIXct(outtime))
 
-labevents <- read_parquet("~/labevents_pq/part-0.parquet")%>%
+labevents <- read_parquet("~/labevents.parquet/part-0.parquet")%>%
   filter(subject_id == 10013310)%>%
   mutate(charttime = as.POSIXct(charttime))
 
@@ -83,46 +85,40 @@ procedures_icd <- read_csv("~/mimic/hosp/procedures_icd.csv.gz")%>%
 diagnoses_icd <- read_csv("~/mimic/hosp/diagnoses_icd.csv.gz")%>%
   left_join(read_csv("~/mimic/hosp/d_icd_diagnoses.csv.gz"))%>%
   filter(subject_id==10013310)%>%
-  ungroup()
+  collect()
 
 transfers <- transfers %>%
   filter(eventtype != "discharge")
 
-diagnoses_icd <- diagnoses_icd %>%
+top_diagnoses <- diagnoses_icd %>%
   arrange(seq_num) %>%
   distinct(long_title, .keep_all = TRUE) %>%
   slice_head(n = 3) %>%
   pull(long_title) %>%
   paste(collapse = "\n")
 
-patient_title <- paste("Patient ", patients$subject_id[1], 
-                     patients$Gender, 
-                       patients$Age, 
-                       " years old, ", patients$Race, sep = ",")
+patient_title <- paste("Patient 10013310",  
+                       ", ", patients$gender, 
+                       ", ", patients$anchor_age, 
+                       " years old, ", tolower(admissions$race), sep = "")
 
-  
 ``` 
 
 
 ```{r}
-
-#| eval=True
 ggplot() +
   geom_segment(data =  transfers, aes(x = intime, xend = outtime,
                                    y = "ADT", yend = "ADT",
                                    color = careunit,
-               linewidth= str_detect(careunit, "(I|C)CU"))) +
-  geom_point(data = procedures_icd, aes(x = as.POSIXct(chartdate), y = "Procedure", shape=long_title)) +
+               linewidth= str_detect(careunit, "ICU|CCU"))) +
+  geom_point(data = procedures_icd, aes(x = chartdate, y = "Procedure", shape=long_title)) +
   geom_point(data = labevents, aes(x = charttime, y = "Lab"),
               shape = 3) +
-  guides(linewidth = "none", shape = guide_legend(nrow = 9)) +
   theme_bw(base_size = 7) +
-  theme(legend.position = "bottom", legend.box = "vertical",
-        legend.title = element_text(size = 9)) +
+  theme(legend.position = "bottom", legend.box = "vertical") +
   scale_y_discrete(limits = c("Procedure", "Lab", "ADT")) +
-  labs(title = paste("Patient",10013310,",",patients$gender,",",patients$anchor_age,"years old",tolower(admissions$race)), subtitle = diagnoses_icd,
-       x = "Time", y = "Event Type", color = "Care Unit") 
-
+  labs(title = patient_title, subtitle = top_diagnoses,
+       x = "Calendar swsTime", y = "Event Type", color = "Care Unit") 
 ```
 
 
@@ -137,20 +133,53 @@ Do a similar visualization for the patient `10013310`.
 **Answer:**
 
 ```{r}
+library(data.table)
 
-#| eval=False
-chartevents <- read_parquet("~/chartevents_pq/part-0.parquet")%>%
-  filter(subject_id == 10013310)%>%
-  group_by(stay_id,itemid)%>%
-  mutate(charttime = as.POSIXct(charttime))
+chartevents_tble1 <- arrow::open_dataset("~/chartevents.parquet", format = "parquet") %>%
+  filter(subject_id ==10013310) %>%
+  collect()
 
-patient_title2 <- paste("Patient ",10013310, 
-                       " ICU stays - Vitals ", sep = "")
+icustays_tble1 <- read_csv("~/mimic/icu/icustays.csv.gz")
 
-ggplot() +
-  geom_line(data = chartevents, aes(x=charttime), y = "itenid",
-             shape = icd_code)) 
+icustays_tble1 <- icustays_tble1 %>%
+  mutate(subject_id == 10013310)
 
+chartevents_tble1 <- chartevents_tble1 %>%
+  mutate(subject_id = 10013310)
+
+# Join chartevents with icustays
+chartevents_icustays <- chartevents_tble1 %>%
+  inner_join(icustays_tble1, by = c("subject_id", "hadm_id", "stay_id"))
+
+
+# Read item information from a CSV file
+cht <- fread("~/mimic/icu/d_items.csv.gz", select = c("itemid", "abbreviation"))
+
+# Join item information with chart events
+chartevents_icustays <- merge(chartevents_icustays, cht, by = "itemid", all.x = TRUE)
+
+# Filter vital signs
+vital_signs <- c("HR", "NBPd", "NBPs", "RR", "Temperature F")
+# Filter rows in chartevents_icustays based on 'abbreviation' column
+chartevents_icustays <- chartevents_icustays[chartevents_icustays$abbreviation %in% vital_signs, ]
+
+# Plot vital sign data
+ggplot(data = chartevents_icustays , aes(x = charttime, y = as.numeric(value), color = abbreviation)) +
+  geom_line() +
+  geom_point(size = 0.5) +
+  facet_grid(abbreviation ~ stay_id, scales = "free_x", space = "free_y") +
+  labs(
+    x = "",
+    y = "",
+    title = "ICU Stays - Vital Signs",
+    color = "Vital Sign"
+  ) +
+  theme(
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    strip.text = element_text(size = 5)
+  ) +
+  scale_x_datetime(labels = scales::date_format("%b %d\n%H:%M:%S"))
   
 ```
 
@@ -348,7 +377,7 @@ d_labitems <- read_csv("~/mimic/hosp/d_labitems.csv.gz",
 icustays_tble <- icustays_tble %>%
   mutate(subject_id = as.character(subject_id))
 
-labevents <- read_parquet("~/labevents_pq/part-0.parquet")
+labevents <- read_parquet("~/labevents.parquet/part-0.parquet")
 
 # Read the lab events data and perform a series of transformations
 labevents_tble <- labevents %>%
@@ -400,46 +429,17 @@ Hint: Use the Parquet format you generated in Homework 2. For reproducibility, m
 **Amswer:**
 
 ```{r}
-vitals <- c(220045, 220179, 220180, 223761, 220210)
+library(dplyr)
+library(tidyr)
 
-# Read chartevents.pq and filter relevant vitals
-chartevents_tble <- read_parquet("~/chartevents_pq/part-0.parquet") %>%
-  filter(itemid %in% vitals)
-
-icustays_tble <- icustays_tble %>%
-  mutate(subject_id = as.character(subject_id))
-
-chartevents_tble <- chartevents_tble %>%
-  mutate(subject_id = as.character(subject_id))
-
-# Filter lab events for patients in icustays_tble
-joint_tble <- chartevents_tble %>%
-  inner_join(icustays_tble, by =c( "subject_id","hadm_id", "stay_id"))%>%
-  filter(charttime >= intime & charttime <= outtime)
-
-# Convert storetime to POSIXct
-joint_tble <- joint_tble %>%
-  mutate(storetime = as.POSIXct(storetime))
-
-# Group by subject_id and itemid, and filter the last available measurement before the ICU stay
-joint_tble2 <- joint_tble %>%
-  group_by(subject_id, stay_id,itemid) %>%
-  summarise(value = first(value, order_by = charttime), .groups = "drop")%>%
-  ungroup() %>%
-  pivot_wider(names_from = itemid, values_from = value,names_prefix = "vital_")
-
-joint_tble2
-```
-
-
-```{r}
+# Read the d_items.csv.gz file
 d_items <- read_csv("~/mimic/icu/d_items.csv.gz")
 
 # Specify vital signs itemids
 vitals <- c(220045, 220179, 220180, 223761, 220210)
 
 # Load chartevents data from Parquet (more efficient for large datasets)
-chartevents_tble <- arrow::open_dataset("~/chartevents_pq", format = "parquet") %>%
+chartevents_tble <- arrow::open_dataset("~/chartevents.parquet", format = "parquet") %>%
   filter(itemid %in% vitals) %>%
   collect()
 
@@ -467,9 +467,16 @@ chartevents_final_tble <- chartevents_first_meas %>%
     names_from = itemid,
     values_from = value,
     names_prefix = "vital_"
+  )%>%
+  rename(
+    heart_rate = vital_220045,
+    systolic_blood_pressure = vital_220179,
+    diastolic_blood_pressure = vital_220180,
+    body_temperature_Fahrenheit = vital_223761,
+    respiratory_rate = vital_220210
   )
-chartevents_final_tble
 
+print(chartevents_final_tble)
 
 ```
 
@@ -488,17 +495,38 @@ The final `mimic_icu_cohort` should have one row per ICU stay and columns for ea
 
 ![](mimic_icu_cohort.png)
 ```{r}
+library(dplyr)
+library(readr)
 
-all_join <- inner_join(icustays_tble, admissions_tble, by = "subject_id") %>%
-                 inner_join(patients_tble, by = "subject_id") %>%
-                 mutate(subject_id = as.character(subject_id)) 
+labevents_tble <- labevents_tble%>%
+  as_tibble()%>%
+  mutate(subject_id = as.character(subject_id))
 
-mimic_icu_cohort <- all_join %>%
-  left_join(labevents_tble, by = c("subject_id", "stay_id")) %>%
-  left_join(chartevents_tble, by = c("subject_id", "stay_id"))
+# Read and convert admissions data into a tibble
+admissions_tble <- read_csv("~/mimic/hosp/admissions.csv.gz") %>%
+  as_tibble()%>%
+  mutate(subject_id = as.character(subject_id))
+
+# Read and convert patients data into a tibble
+patients_tble <- read_csv("~/mimic/hosp/patients.csv.gz") %>%
+  as_tibble()%>%
+  mutate(subject_id = as.character(subject_id))
+
+chartevents_final_tble <- chartevents_final_tble %>%
+  mutate(subject_id = as.character(subject_id))
 
 
+# Inner join icustays_tble with patients_tble
+mimic_icu_cohort <- icustays_tble %>%
+  inner_join(patients_tble, by = "subject_id") %>%
+  mutate(age_intime = year(intime) - anchor_year + anchor_age) %>%
+  filter(age_intime >= 18) %>%
+  inner_join(admissions_tble, by = c("subject_id", "hadm_id")) %>%
+  left_join(labevents_tble%>% group_by(subject_id), by = "subject_id") %>%
+  left_join(chartevents_final_tble %>% group_by(subject_id), by = "subject_id")
 
+# Print summary of mimic_icu_cohort
+glimpse(mimic_icu_cohort)
 
 ```
 
@@ -519,8 +547,42 @@ Summarize the following information about the ICU stay cohort `mimic_icu_cohort`
 
 **Answer:**
 ```{R}
-# Length of ICU stay los vs demographic
-los=
+model <- lm(los ~ race + insurance + marital_status + gender + age_intime, data = mimic_icu_cohort)
+summary(model)
+```
+
+```{R}
+# Fit a linear regression model
+model2 <- lm(los ~ Bicarbonate + Chloride + Hematocrit + Potassium +Potassium + `White Blood Cells`, data = mimic_icu_cohort)
+
+# Summarize the regression results
+summary(model2)
 
 ```
 
+```{R}
+vars_to_convert <- c("heart_rate", "systolic_blood_pressure", "diastolic_blood_pressure", "body_temperature_Fahrenheit", "respiratory_rate")
+
+for (var in vars_to_convert) {
+  mimic_icu_cohort[[var]] <- as.numeric(mimic_icu_cohort[[var]])
+}
+
+mimic_icu_cohort$mean_vital_signs <- rowMeans(mimic_icu_cohort[, c("heart_rate", "systolic_blood_pressure", "diastolic_blood_pressure", "body_temperature_Fahrenheit", "respiratory_rate")])
+
+model3 <- lm(los ~ mean_vital_signs, data = mimic_icu_cohort)
+
+# Summarize the regression results
+summary(model3)
+
+```
+
+```{R}
+
+# Conduct ANOVA
+anova_result <- aov(los ~ first_careunit, data = mimic_icu_cohort)
+
+# Summary of ANOVA results
+summary(anova_result)
+
+
+```
