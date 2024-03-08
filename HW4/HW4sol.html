@@ -3101,7 +3101,7 @@ loaded via a namespace (and not attached):
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>memuse<span class="sc">::</span><span class="fu">Sys.meminfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Totalram:  31.332 GiB 
-Freeram:   28.969 GiB </code></pre>
+Freeram:   28.950 GiB </code></pre>
 </div>
 </div>
 <p>Load database libraries and the tidyverse frontend:</p>
@@ -3602,74 +3602,121 @@ ORDER BY is ignored in subqueries without LIMIT
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forcats)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Lump infrequent levels into &quot;Other&quot; level</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort_processed <span class="ot">&lt;-</span> mimic_icu_cohort <span class="sc">%&gt;%</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">first_careunit =</span> <span class="fu">fct_lump</span>(first_careunit,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">last_careunit =</span> <span class="fu">fct_lump</span>(last_careunit,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">admission_type =</span> <span class="fu">fct_lump</span>(admission_type,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">admission_location =</span> <span class="fu">fct_lump</span>(admission_location,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">discharge_location =</span> <span class="fu">fct_lump</span>(discharge_location,  <span class="at">prop =</span> <span class="fl">0.05</span>)</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Collapse the levels of race</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort_processed <span class="ot">&lt;-</span> <span class="fu">mutate</span>(</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  mimic_icu_cohort_processed,</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">race =</span> <span class="fu">fct_collapse</span>(</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    race,</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">ASIAN =</span> <span class="fu">c</span>(<span class="st">&quot;ASIAN&quot;</span>,<span class="st">&quot;ASIAN - ASIAN INDIAN&quot;</span>,<span class="st">&quot;ASIAN - CHINESE&quot;</span>,<span class="st">&quot;ASIAN - KOREAN&quot;</span>,<span class="st">&quot;ASIAN - SOUTH EAST ASIAN&quot;</span>),</span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">BLACK =</span> <span class="fu">c</span>(<span class="st">&quot;BLACK/AFRICAN&quot;</span>, <span class="st">&quot;BLACK/AFRICAN AMERICAN&quot;</span>, <span class="st">&quot;BLACK/CAPE VERDEAN&quot;</span>, <span class="st">&quot;BLACK/CARIBBEAN ISLAND&quot;</span>),</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">HISPANIC =</span> <span class="fu">c</span>(<span class="st">&quot;HISPANIC OR LATINO&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - CENTRAL AMERICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - CUBAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - DOMINICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - MEXICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - PUERTO RICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - SALVADORAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - COLUMBIAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - GUATEMALAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - HONDURAN&quot;</span>),</span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">WHITE =</span> <span class="fu">c</span>(<span class="st">&quot;WHITE&quot;</span>,<span class="st">&quot;WHITE - BRAZILIAN&quot;</span>,<span class="st">&quot;WHITE - EASTERN EUROPEAN&quot;</span>,<span class="st">&quot;WHITE - RUSSIAN&quot;</span>,<span class="st">&quot;WHITE - OTHER EUROPEAN&quot;</span>),</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">Other =</span> <span class="fu">c</span>(<span class="st">&quot;Other&quot;</span> , <span class="st">&quot;AMERICAN INDIAN/ALASKA NATIVE&quot;</span>,<span class="st">&quot;NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER&quot;</span>,<span class="st">&quot;PORTUGUESE&quot;</span>,<span class="st">&quot;SOUTH AMERICAN&quot;</span>,<span class="st">&quot;MULTIPLE RACE/ETHNICITY&quot;</span>,<span class="st">&quot;PATIENT DECLINED TO ANSWER&quot;</span>,<span class="st">&quot;UNABLE TO OBTAIN&quot;</span>,<span class="st">&quot;UNKNOWN&quot;</span> )</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mimic_icu_cohort)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [73,181 × 41] (S3: tbl_df/tbl/data.frame)
+ $ subject_id                           : int [1:73181] 10000032 10000980 10001217 10001217 10001725 10001884 10002013 10002155 10002155 10002155 ...
+ $ hadm_id                              : int [1:73181] 29079034 26913865 24597018 27703517 25563031 26184834 23581541 20345487 23822395 28994087 ...
+ $ stay_id                              : int [1:73181] 39553978 39765666 37067082 34592300 31205490 37510196 39060235 32358465 33685454 31090461 ...
+ $ first_careunit                       : chr [1:73181] &quot;Medical Intensive Care Unit (MICU)&quot; &quot;Medical Intensive Care Unit (MICU)&quot; &quot;Surgical Intensive Care Unit (SICU)&quot; &quot;Surgical Intensive Care Unit (SICU)&quot; ...
+ $ last_careunit                        : chr [1:73181] &quot;Medical Intensive Care Unit (MICU)&quot; &quot;Medical Intensive Care Unit (MICU)&quot; &quot;Surgical Intensive Care Unit (SICU)&quot; &quot;Surgical Intensive Care Unit (SICU)&quot; ...
+ $ intime                               : POSIXct[1:73181], format: &quot;2180-07-23 14:00:00&quot; &quot;2189-06-27 08:42:00&quot; ...
+ $ outtime                              : POSIXct[1:73181], format: &quot;2180-07-23 23:50:47&quot; &quot;2189-06-27 20:38:27&quot; ...
+ $ los                                  : num [1:73181] 0.41 0.498 1.118 0.948 1.339 ...
+ $ gender                               : chr [1:73181] &quot;F&quot; &quot;F&quot; &quot;F&quot; &quot;F&quot; ...
+ $ anchor_age                           : int [1:73181] 52 73 55 55 46 68 53 80 80 80 ...
+ $ anchor_year                          : int [1:73181] 2180 2186 2157 2157 2110 2122 2156 2128 2128 2128 ...
+ $ anchor_year_group                    : chr [1:73181] &quot;2014 - 2016&quot; &quot;2008 - 2010&quot; &quot;2011 - 2013&quot; &quot;2011 - 2013&quot; ...
+ $ dod                                  : Date[1:73181], format: &quot;2180-09-09&quot; &quot;2193-08-26&quot; ...
+ $ age_intime                           : int [1:73181] 52 76 55 55 46 77 57 83 81 82 ...
+ $ admittime                            : POSIXct[1:73181], format: &quot;2180-07-23 12:35:00&quot; &quot;2189-06-27 07:38:00&quot; ...
+ $ dischtime                            : POSIXct[1:73181], format: &quot;2180-07-25 17:55:00&quot; &quot;2189-07-03 03:00:00&quot; ...
+ $ deathtime                            : POSIXct[1:73181], format: NA NA ...
+ $ admission_type                       : chr [1:73181] &quot;EW EMER.&quot; &quot;EW EMER.&quot; &quot;EW EMER.&quot; &quot;DIRECT EMER.&quot; ...
+ $ admit_provider_id                    : chr [1:73181] &quot;P30KEH&quot; &quot;P30KEH&quot; &quot;P4645A&quot; &quot;P99698&quot; ...
+ $ admission_location                   : chr [1:73181] &quot;EMERGENCY ROOM&quot; &quot;EMERGENCY ROOM&quot; &quot;EMERGENCY ROOM&quot; &quot;PHYSICIAN REFERRAL&quot; ...
+ $ discharge_location                   : chr [1:73181] &quot;HOME&quot; &quot;HOME HEALTH CARE&quot; &quot;HOME HEALTH CARE&quot; &quot;HOME HEALTH CARE&quot; ...
+ $ insurance                            : chr [1:73181] &quot;Medicaid&quot; &quot;Medicare&quot; &quot;Other&quot; &quot;Other&quot; ...
+ $ language                             : chr [1:73181] &quot;ENGLISH&quot; &quot;ENGLISH&quot; &quot;?&quot; &quot;?&quot; ...
+ $ marital_status                       : chr [1:73181] &quot;WIDOWED&quot; &quot;MARRIED&quot; &quot;MARRIED&quot; &quot;MARRIED&quot; ...
+ $ race                                 : chr [1:73181] &quot;WHITE&quot; &quot;BLACK/AFRICAN AMERICAN&quot; &quot;WHITE&quot; &quot;WHITE&quot; ...
+ $ edregtime                            : POSIXct[1:73181], format: &quot;2180-07-23 05:54:00&quot; &quot;2189-06-27 06:25:00&quot; ...
+ $ edouttime                            : POSIXct[1:73181], format: &quot;2180-07-23 14:00:00&quot; &quot;2189-06-27 08:42:00&quot; ...
+ $ hospital_expire_flag                 : int [1:73181] 0 0 0 0 0 1 0 1 0 0 ...
+ $ Bicarbonate                          : num [1:73181] 25 21 22 30 NA 30 24 26 24 23 ...
+ $ Sodium                               : num [1:73181] 126 144 142 142 139 130 137 120 139 135 ...
+ $ Hematocrit                           : num [1:73181] 41.1 27.3 38.1 37.4 NA 39.7 34.9 22.4 39.7 25.5 ...
+ $ Potassium                            : num [1:73181] 6.7 3.9 4.2 4.1 4.1 4.5 3.5 5.7 4.6 4.9 ...
+ $ Creatinine                           : num [1:73181] 0.7 2.3 0.6 0.5 NA 1.1 0.9 1.4 1.1 2.8 ...
+ $ White Blood Cells                    : num [1:73181] 6.9 5.3 15.7 5.4 NA 12.2 7.2 9.8 7.9 17.9 ...
+ $ Glucose                              : num [1:73181] 102 89 112 87 NA 141 288 133 138 117 ...
+ $ Chloride                             : num [1:73181] 95 109 108 104 98 88 102 85 105 98 ...
+ $ Non Invasive Blood Pressure systolic : chr [1:73181] &quot;84&quot; &quot;158&quot; &quot;151&quot; &quot;167&quot; ...
+ $ Heart Rate                           : chr [1:73181] &quot;91&quot; &quot;77&quot; &quot;86&quot; &quot;96&quot; ...
+ $ Respiratory Rate                     : chr [1:73181] &quot;24&quot; &quot;24&quot; &quot;18&quot; &quot;17&quot; ...
+ $ Temperature Fahrenheit               : chr [1:73181] &quot;98.7&quot; &quot;98&quot; &quot;98.5&quot; &quot;97.6&quot; ...
+ $ Non Invasive Blood Pressure diastolic: chr [1:73181] &quot;48&quot; &quot;77&quot; &quot;90&quot; &quot;97&quot; ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Lump infrequent levels into &quot;Other&quot; level</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort <span class="ot">&lt;-</span> mimic_icu_cohort <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">first_careunit =</span> <span class="fu">fct_lump</span>(first_careunit,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">last_careunit =</span> <span class="fu">fct_lump</span>(last_careunit,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">admission_type =</span> <span class="fu">fct_lump</span>(admission_type,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">admission_location =</span> <span class="fu">fct_lump</span>(admission_location,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">discharge_location =</span> <span class="fu">fct_lump</span>(discharge_location,  <span class="at">prop =</span> <span class="fl">0.05</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Collapse the levels of race</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort <span class="ot">&lt;-</span> <span class="fu">mutate</span>(</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  mimic_icu_cohort,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">race =</span> <span class="fu">fct_collapse</span>(</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    race,</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">ASIAN =</span> <span class="fu">c</span>(<span class="st">&quot;ASIAN&quot;</span>,<span class="st">&quot;ASIAN - ASIAN INDIAN&quot;</span>,<span class="st">&quot;ASIAN - CHINESE&quot;</span>,<span class="st">&quot;ASIAN - KOREAN&quot;</span>,<span class="st">&quot;ASIAN - SOUTH EAST ASIAN&quot;</span>),</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">BLACK =</span> <span class="fu">c</span>(<span class="st">&quot;BLACK/AFRICAN&quot;</span>, <span class="st">&quot;BLACK/AFRICAN AMERICAN&quot;</span>, <span class="st">&quot;BLACK/CAPE VERDEAN&quot;</span>, <span class="st">&quot;BLACK/CARIBBEAN ISLAND&quot;</span>),</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">HISPANIC =</span> <span class="fu">c</span>(<span class="st">&quot;HISPANIC OR LATINO&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - CENTRAL AMERICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - CUBAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - DOMINICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - MEXICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - PUERTO RICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - SALVADORAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - COLUMBIAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - GUATEMALAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - HONDURAN&quot;</span>),</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">WHITE =</span> <span class="fu">c</span>(<span class="st">&quot;WHITE&quot;</span>,<span class="st">&quot;WHITE - BRAZILIAN&quot;</span>,<span class="st">&quot;WHITE - EASTERN EUROPEAN&quot;</span>,<span class="st">&quot;WHITE - RUSSIAN&quot;</span>,<span class="st">&quot;WHITE - OTHER EUROPEAN&quot;</span>),</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Other =</span> <span class="fu">c</span>(<span class="st">&quot;Other&quot;</span> , <span class="st">&quot;AMERICAN INDIAN/ALASKA NATIVE&quot;</span>,<span class="st">&quot;NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER&quot;</span>,<span class="st">&quot;PORTUGUESE&quot;</span>,<span class="st">&quot;SOUTH AMERICAN&quot;</span>,<span class="st">&quot;MULTIPLE RACE/ETHNICITY&quot;</span>,<span class="st">&quot;PATIENT DECLINED TO ANSWER&quot;</span>,<span class="st">&quot;UNABLE TO OBTAIN&quot;</span>,<span class="st">&quot;UNKNOWN&quot;</span> )</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: There was 1 warning in `mutate()`.
 ℹ In argument: `race = fct_collapse(...)`.
 Caused by warning:
 ! Unknown levels in `f`: Other</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Create a new variable los_long</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort_processed <span class="ot">&lt;-</span> <span class="fu">mutate</span>(</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  mimic_icu_cohort_processed,</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">los_long =</span> los <span class="sc">&gt;=</span> <span class="dv">2</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Summarize the data using tbl_summary(), stratified by los_long</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort_processed <span class="ot">&lt;-</span> mimic_icu_cohort_processed <span class="sc">%&gt;%</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure systolic</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure systolic</span><span class="st">`</span>),</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Non Invasive Blood Pressure diastolic</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure diastolic</span><span class="st">`</span>),</span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Respiratory Rate</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Respiratory Rate</span><span class="st">`</span>),</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Heart Rate</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Heart Rate</span><span class="st">`</span>),</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Temperature Fahrenheit</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Temperature Fahrenheit</span><span class="st">`</span>)</span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>         )<span class="sc">|&gt;</span></span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>subject_id, <span class="sc">-</span>hadm_id, <span class="sc">-</span>stay_id,<span class="sc">-</span>admit_provider_id,</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>intime, <span class="sc">-</span>outtime, <span class="sc">-</span>admittime, <span class="sc">-</span>dischtime, </span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>deathtime, <span class="sc">-</span>edregtime, <span class="sc">-</span>edouttime,<span class="sc">-</span>anchor_age,</span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>anchor_year,<span class="sc">-</span>anchor_year_group)</span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> <span class="fu">tbl_summary</span>(mimic_icu_cohort_processed, </span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>                             <span class="at">by =</span> los_long)</span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>summary_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Create a new variable los_long</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort <span class="ot">&lt;-</span> <span class="fu">mutate</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  mimic_icu_cohort,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">los_long =</span> los <span class="sc">&gt;=</span> <span class="dv">2</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Summarize the data using tbl_summary(), stratified by los_long</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort <span class="ot">&lt;-</span> mimic_icu_cohort <span class="sc">%&gt;%</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure systolic</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure systolic</span><span class="st">`</span>),</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Non Invasive Blood Pressure diastolic</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure diastolic</span><span class="st">`</span>),</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Respiratory Rate</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Respiratory Rate</span><span class="st">`</span>),</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Heart Rate</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Heart Rate</span><span class="st">`</span>),</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Temperature Fahrenheit</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Temperature Fahrenheit</span><span class="st">`</span>)</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort_subset <span class="ot">&lt;-</span> mimic_icu_cohort <span class="sc">%&gt;%</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">select</span>(<span class="sc">-</span>subject_id, <span class="sc">-</span>hadm_id,</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>stay_id,<span class="sc">-</span>admit_provider_id,</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>intime, <span class="sc">-</span>outtime, <span class="sc">-</span>admittime, </span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>dischtime, <span class="sc">-</span>deathtime, <span class="sc">-</span>edregtime,</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>edouttime,<span class="sc">-</span>anchor_age,</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>anchor_year,<span class="sc">-</span>anchor_year_group)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> <span class="fu">tbl_summary</span>(mimic_icu_cohort_subset, </span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>                             <span class="at">by =</span> los_long)</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>summary_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
-<div id="xjfyoqfopt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xjfyoqfopt table {
+<div id="mxzsliqehb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mxzsliqehb table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#xjfyoqfopt thead, #xjfyoqfopt tbody, #xjfyoqfopt tfoot, #xjfyoqfopt tr, #xjfyoqfopt td, #xjfyoqfopt th {
+#mxzsliqehb thead, #mxzsliqehb tbody, #mxzsliqehb tfoot, #mxzsliqehb tr, #mxzsliqehb td, #mxzsliqehb th {
 border-style: none;
 }
-#xjfyoqfopt p {
+#mxzsliqehb p {
 margin: 0;
 padding: 0;
 }
-#xjfyoqfopt .gt_table {
+#mxzsliqehb .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -3694,11 +3741,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_caption {
+#mxzsliqehb .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#xjfyoqfopt .gt_title {
+#mxzsliqehb .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -3709,7 +3756,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#xjfyoqfopt .gt_subtitle {
+#mxzsliqehb .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3720,7 +3767,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#xjfyoqfopt .gt_heading {
+#mxzsliqehb .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3731,12 +3778,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_bottom_border {
+#mxzsliqehb .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_col_headings {
+#mxzsliqehb .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3750,7 +3797,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_col_heading {
+#mxzsliqehb .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3769,7 +3816,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#xjfyoqfopt .gt_column_spanner_outer {
+#mxzsliqehb .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3780,13 +3827,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#xjfyoqfopt .gt_column_spanner_outer:first-child {
+#mxzsliqehb .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#xjfyoqfopt .gt_column_spanner_outer:last-child {
+#mxzsliqehb .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#xjfyoqfopt .gt_column_spanner {
+#mxzsliqehb .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3797,10 +3844,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#xjfyoqfopt .gt_spanner_row {
+#mxzsliqehb .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#xjfyoqfopt .gt_group_heading {
+#mxzsliqehb .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3825,7 +3872,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#xjfyoqfopt .gt_empty_group_heading {
+#mxzsliqehb .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3839,13 +3886,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#xjfyoqfopt .gt_from_md > :first-child {
+#mxzsliqehb .gt_from_md > :first-child {
 margin-top: 0;
 }
-#xjfyoqfopt .gt_from_md > :last-child {
+#mxzsliqehb .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#xjfyoqfopt .gt_row {
+#mxzsliqehb .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3863,7 +3910,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#xjfyoqfopt .gt_stub {
+#mxzsliqehb .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3875,7 +3922,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xjfyoqfopt .gt_stub_row_group {
+#mxzsliqehb .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3888,13 +3935,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#xjfyoqfopt .gt_row_group_first td {
+#mxzsliqehb .gt_row_group_first td {
 border-top-width: 2px;
 }
-#xjfyoqfopt .gt_row_group_first th {
+#mxzsliqehb .gt_row_group_first th {
 border-top-width: 2px;
 }
-#xjfyoqfopt .gt_summary_row {
+#mxzsliqehb .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3903,14 +3950,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xjfyoqfopt .gt_first_summary_row {
+#mxzsliqehb .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_first_summary_row.thick {
+#mxzsliqehb .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#xjfyoqfopt .gt_last_summary_row {
+#mxzsliqehb .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3919,7 +3966,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_grand_summary_row {
+#mxzsliqehb .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3928,7 +3975,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xjfyoqfopt .gt_first_grand_summary_row {
+#mxzsliqehb .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3937,7 +3984,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_last_grand_summary_row_top {
+#mxzsliqehb .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3946,10 +3993,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_striped {
+#mxzsliqehb .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#xjfyoqfopt .gt_table_body {
+#mxzsliqehb .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3957,7 +4004,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_footnotes {
+#mxzsliqehb .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3970,7 +4017,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_footnote {
+#mxzsliqehb .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -3978,7 +4025,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xjfyoqfopt .gt_sourcenotes {
+#mxzsliqehb .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3991,57 +4038,57 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#xjfyoqfopt .gt_sourcenote {
+#mxzsliqehb .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#xjfyoqfopt .gt_left {
+#mxzsliqehb .gt_left {
 text-align: left;
 }
-#xjfyoqfopt .gt_center {
+#mxzsliqehb .gt_center {
 text-align: center;
 }
-#xjfyoqfopt .gt_right {
+#mxzsliqehb .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#xjfyoqfopt .gt_font_normal {
+#mxzsliqehb .gt_font_normal {
 font-weight: normal;
 }
-#xjfyoqfopt .gt_font_bold {
+#mxzsliqehb .gt_font_bold {
 font-weight: bold;
 }
-#xjfyoqfopt .gt_font_italic {
+#mxzsliqehb .gt_font_italic {
 font-style: italic;
 }
-#xjfyoqfopt .gt_super {
+#mxzsliqehb .gt_super {
 font-size: 65%;
 }
-#xjfyoqfopt .gt_footnote_marks {
+#mxzsliqehb .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#xjfyoqfopt .gt_asterisk {
+#mxzsliqehb .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#xjfyoqfopt .gt_indent_1 {
+#mxzsliqehb .gt_indent_1 {
 text-indent: 5px;
 }
-#xjfyoqfopt .gt_indent_2 {
+#mxzsliqehb .gt_indent_2 {
 text-indent: 10px;
 }
-#xjfyoqfopt .gt_indent_3 {
+#mxzsliqehb .gt_indent_3 {
 text-indent: 15px;
 }
-#xjfyoqfopt .gt_indent_4 {
+#mxzsliqehb .gt_indent_4 {
 text-indent: 20px;
 }
-#xjfyoqfopt .gt_indent_5 {
+#mxzsliqehb .gt_indent_5 {
 text-indent: 25px;
 }
 </style>
@@ -4340,20 +4387,20 @@ text-indent: 25px;
 <h3 class="anchored" data-anchor-id="q1.9-save-the-final-tibble">Q1.9 Save the final tibble</h3>
 <p>Save the final tibble to an R data file <code>mimic_icu_cohort.rds</code> in the <code>mimiciv_shiny</code> folder.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make a directory mimiciv_shiny</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">&quot;mimiciv_shiny&quot;</span>)) {</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="st">&quot;mimiciv_shiny&quot;</span>)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># save the final tibble</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort <span class="sc">|&gt;</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_rds</span>(<span class="st">&quot;mimiciv_shiny/mimic_icu_cohort.rds&quot;</span>, <span class="at">compress =</span> <span class="st">&quot;gz&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make a directory mimiciv_shiny</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">&quot;mimiciv_shiny&quot;</span>)) {</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="st">&quot;mimiciv_shiny&quot;</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># save the final tibble</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort <span class="sc">|&gt;</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_rds</span>(<span class="st">&quot;mimiciv_shiny/mimic_icu_cohort.rds&quot;</span>, <span class="at">compress =</span> <span class="st">&quot;gz&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Close database connection and clear workspace.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">&quot;con_bq&quot;</span>)) {</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dbDisconnect</span>(con_bq)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">&quot;con_bq&quot;</span>)) {</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dbDisconnect</span>(con_bq)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Although it is not a good practice to add big data files to git, for grading purpose, please add <code>mimic_icu_cohort.rds</code> to your git repository.</p>
 </section>

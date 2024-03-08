@@ -180,8 +180,10 @@ Hint: Below is a numerical summary of my tibble after preprocessing:
 
 library(forcats)
 
+str(mimic_icu_cohort)
+
 # Step 1: Lump infrequent levels into "Other" level
-mimic_icu_cohort_processed <- mimic_icu_cohort %>%
+mimic_icu_cohort <- mimic_icu_cohort %>%
   mutate(
     first_careunit = fct_lump(first_careunit,  prop = 0.05),
     last_careunit = fct_lump(last_careunit,  prop = 0.05),
@@ -191,8 +193,8 @@ mimic_icu_cohort_processed <- mimic_icu_cohort %>%
   )
 
 # Step 2: Collapse the levels of race
-mimic_icu_cohort_processed <- mutate(
-  mimic_icu_cohort_processed,
+mimic_icu_cohort <- mutate(
+  mimic_icu_cohort,
   race = fct_collapse(
     race,
     ASIAN = c("ASIAN","ASIAN - ASIAN INDIAN","ASIAN - CHINESE","ASIAN - KOREAN","ASIAN - SOUTH EAST ASIAN"),
@@ -203,27 +205,29 @@ mimic_icu_cohort_processed <- mutate(
 ))
 
 # Step 3: Create a new variable los_long
-mimic_icu_cohort_processed <- mutate(
-  mimic_icu_cohort_processed,
+mimic_icu_cohort <- mutate(
+  mimic_icu_cohort,
   los_long = los >= 2
 )
 
 # Step 4: Summarize the data using tbl_summary(), stratified by los_long
-
-
-mimic_icu_cohort_processed <- mimic_icu_cohort_processed %>%
+mimic_icu_cohort <- mimic_icu_cohort %>%
   mutate(`Non Invasive Blood Pressure systolic` = as.numeric(`Non Invasive Blood Pressure systolic`),
     `Non Invasive Blood Pressure diastolic` = as.numeric(`Non Invasive Blood Pressure diastolic`),
     `Respiratory Rate` = as.numeric(`Respiratory Rate`),
     `Heart Rate` = as.numeric(`Heart Rate`),
     `Temperature Fahrenheit` = as.numeric(`Temperature Fahrenheit`)
-         )|>
-  select(-subject_id, -hadm_id, -stay_id,-admit_provider_id,
-         -intime, -outtime, -admittime, -dischtime, 
-         -deathtime, -edregtime, -edouttime,-anchor_age,
-         -anchor_year,-anchor_year_group)
+         )
+ 
+mimic_icu_cohort_subset <- mimic_icu_cohort %>%
+                                  select(-subject_id, -hadm_id,
+                                  -stay_id,-admit_provider_id,
+                                  -intime, -outtime, -admittime, 
+                                  -dischtime, -deathtime, -edregtime,
+                                  -edouttime,-anchor_age,
+                                  -anchor_year,-anchor_year_group)
 
-summary_table <- tbl_summary(mimic_icu_cohort_processed, 
+summary_table <- tbl_summary(mimic_icu_cohort_subset, 
                              by = los_long)
 
 summary_table
