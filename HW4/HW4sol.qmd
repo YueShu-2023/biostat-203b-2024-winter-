@@ -42,7 +42,7 @@ Below is an outline of steps. In this homework, we exclusively work with the Big
 
 Authenticate with BigQuery using the service account token. Please place the service account token (shared via BruinLearn) in the working directory (same folder as your qmd file). Do **not** add this token to your git repository.
 ```{r}
-# path to the service account token 
+# path to the service account token
 satoken <- "biostat-203b-2024-winter-313290ce47a6.json"
 # BigQuery authentication using service account
 bq_auth(path = satoken)
@@ -51,10 +51,10 @@ Connect to BigQuery database `mimic4_v2_2` in GCP (Google Cloud Platform), using
 ```{r}
 # connect to the BigQuery database `biostat-203b-2024-winter.mimic4_v2_2`
 con_bq <- dbConnect(
-    bigrquery::bigquery(),
-    project = "biostat-203b-2024-winter",
-    dataset = "mimic4_v2_2",
-    billing = "biostat-203b-2024-winter"
+  bigrquery::bigquery(),
+  project = "biostat-203b-2024-winter",
+  dataset = "mimic4_v2_2",
+  billing = "biostat-203b-2024-winter"
 )
 con_bq
 ```
@@ -76,7 +76,7 @@ icustays_tble <- tbl(con_bq, "icustays") |>
 
 Connect to the `admissions` table.
 ```{r}
- admissions_tble <- tbl(con_bq, "admissions") |>
+admissions_tble <- tbl(con_bq, "admissions") |>
   # show_query() |>
   print(width = Inf)
 ```
@@ -85,7 +85,7 @@ Connect to the `admissions` table.
 
 Connect to the `patients` table.
 ```{r}
-patients_tble <-tbl(con_bq, "patients") |>
+patients_tble <- tbl(con_bq, "patients") |>
   # show_query() |>
   print(width = Inf)
 ```
@@ -98,26 +98,26 @@ Connect to the `labevents` table and retrieve a subset that only contain subject
 
 ```{r}
 lab_subset <- tbl(con_bq, "labevents") |>
-    select(subject_id, itemid, valuenum, storetime) |>
-    inner_join(icustays_tble, by = "subject_id") |>
-    filter(itemid %in% c(50912, 50971, 50983, 50902, 
-                          50882, 51221, 51301, 50931)) |>
-    left_join(
-        tbl(con_bq, "d_labitems", show_col_types = FALSE) |> 
-            select(itemid, label),
-        by = "itemid") |>
-    select(subject_id, stay_id, label, valuenum, storetime, intime) |> 
-    filter(storetime < intime) |> 
-    group_by(stay_id, label) |>
-    slice_max(order_by = storetime, n = 1) |>
-    ungroup() |>
-    select(subject_id, stay_id, label, valuenum) |>
-    pivot_wider(names_from = label, values_from = valuenum) |>
-    arrange(subject_id, stay_id) |>
-    print(width = Inf)
-
-
-
+  select(subject_id, itemid, valuenum, storetime) |>
+  inner_join(icustays_tble, by = "subject_id") |>
+  filter(itemid %in% c(
+    50912, 50971, 50983, 50902,
+    50882, 51221, 51301, 50931
+  )) |>
+  left_join(
+    tbl(con_bq, "d_labitems", show_col_types = FALSE) |>
+      select(itemid, label),
+    by = "itemid"
+  ) |>
+  select(subject_id, stay_id, label, valuenum, storetime, intime) |>
+  filter(storetime < intime) |>
+  group_by(stay_id, label) |>
+  slice_max(order_by = storetime, n = 1) |>
+  ungroup() |>
+  select(subject_id, stay_id, label, valuenum) |>
+  pivot_wider(names_from = label, values_from = valuenum) |>
+  arrange(subject_id, stay_id) |>
+  print(width = Inf)
 ```
 
 ### Q1.6 `chartevents` data
@@ -128,22 +128,23 @@ Connect to `chartevents` table and retrieve a subset that only contain subjects 
 
 ```{r}
 chartevents_subset <- tbl(con_bq, "chartevents") |>
-    select(subject_id, itemid, value, storetime) |>
-    inner_join(icustays_tble, by = "subject_id") |>
-    filter(itemid %in% c(220045, 220179, 220180, 223761, 220210)) |>
-    left_join(
-        tbl(con_bq, "d_items", show_col_types = FALSE) |> 
-            select(itemid, label),
-        by = "itemid") |>
-    select(subject_id, stay_id, label, value, storetime, intime,outtime) |> 
-    filter(storetime >= intime & storetime <= outtime)|> 
-    group_by(stay_id, label) |>
-    slice_min(order_by = storetime, n = 1) |>
-    ungroup() |>
-    select(subject_id, stay_id, label, value) |>
-    pivot_wider(names_from = label, values_from = value) |>
-    arrange(subject_id, stay_id) |>
-    print(width = Inf)
+  select(subject_id, itemid, value, storetime) |>
+  inner_join(icustays_tble, by = "subject_id") |>
+  filter(itemid %in% c(220045, 220179, 220180, 223761, 220210)) |>
+  left_join(
+    tbl(con_bq, "d_items", show_col_types = FALSE) |>
+      select(itemid, label),
+    by = "itemid"
+  ) |>
+  select(subject_id, stay_id, label, value, storetime, intime, outtime) |>
+  filter(storetime >= intime & storetime <= outtime) |>
+  group_by(stay_id, label) |>
+  slice_min(order_by = storetime, n = 1) |>
+  ungroup() |>
+  select(subject_id, stay_id, label, value) |>
+  pivot_wider(names_from = label, values_from = value) |>
+  arrange(subject_id, stay_id) |>
+  print(width = Inf)
 ```
 
 ### Q1.7 Put things together
@@ -157,13 +158,12 @@ mimic_icu_cohort <- icustays_tble |>
   inner_join(patients_tble, by = "subject_id") |>
   mutate(age_intime = year(intime) - anchor_year + anchor_age) |>
   filter(age_intime >= 18) |>
-  inner_join(admissions_tble, by = c("subject_id","hadm_id")) |>
-  left_join(lab_subset, by = c("subject_id","stay_id")) |>
-  left_join(chartevents_subset, by = c("subject_id","stay_id")) |>
-  arrange(subject_id,hadm_id,stay_id) |>
+  inner_join(admissions_tble, by = c("subject_id", "hadm_id")) |>
+  left_join(lab_subset, by = c("subject_id", "stay_id")) |>
+  left_join(chartevents_subset, by = c("subject_id", "stay_id")) |>
+  arrange(subject_id, hadm_id, stay_id) |>
   collect() |>
   print(width = Inf)
-
 ```
 
 ### Q1.8 Preprocessing
@@ -177,7 +177,6 @@ Hint: Below is a numerical summary of my tibble after preprocessing:
 **Answer:**
 
 ```{r}
-
 library(forcats)
 
 str(mimic_icu_cohort)
@@ -185,11 +184,11 @@ str(mimic_icu_cohort)
 # Step 1: Lump infrequent levels into "Other" level
 mimic_icu_cohort <- mimic_icu_cohort %>%
   mutate(
-    first_careunit = fct_lump(first_careunit,  prop = 0.05),
-    last_careunit = fct_lump(last_careunit,  prop = 0.05),
-    admission_type = fct_lump(admission_type,  prop = 0.05),
-    admission_location = fct_lump(admission_location,  prop = 0.05),
-    discharge_location = fct_lump(discharge_location,  prop = 0.05)
+    first_careunit = fct_lump(first_careunit, prop = 0.05),
+    last_careunit = fct_lump(last_careunit, prop = 0.05),
+    admission_type = fct_lump(admission_type, prop = 0.05),
+    admission_location = fct_lump(admission_location, prop = 0.05),
+    discharge_location = fct_lump(discharge_location, prop = 0.05)
   )
 
 # Step 2: Collapse the levels of race
@@ -197,12 +196,23 @@ mimic_icu_cohort <- mutate(
   mimic_icu_cohort,
   race = fct_collapse(
     race,
-    ASIAN = c("ASIAN","ASIAN - ASIAN INDIAN","ASIAN - CHINESE","ASIAN - KOREAN","ASIAN - SOUTH EAST ASIAN"),
-    BLACK = c("BLACK/AFRICAN", "BLACK/AFRICAN AMERICAN", "BLACK/CAPE VERDEAN", "BLACK/CARIBBEAN ISLAND"),
-    HISPANIC = c("HISPANIC OR LATINO","HISPANIC/LATINO - CENTRAL AMERICAN","HISPANIC/LATINO - CUBAN","HISPANIC/LATINO - DOMINICAN","HISPANIC/LATINO - MEXICAN","HISPANIC/LATINO - PUERTO RICAN","HISPANIC/LATINO - SALVADORAN","HISPANIC/LATINO - COLUMBIAN","HISPANIC/LATINO - GUATEMALAN","HISPANIC/LATINO - HONDURAN"),
-    WHITE = c("WHITE","WHITE - BRAZILIAN","WHITE - EASTERN EUROPEAN","WHITE - RUSSIAN","WHITE - OTHER EUROPEAN"),
-    Other = c("Other" , "AMERICAN INDIAN/ALASKA NATIVE","NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER","PORTUGUESE","SOUTH AMERICAN","MULTIPLE RACE/ETHNICITY","PATIENT DECLINED TO ANSWER","UNABLE TO OBTAIN","UNKNOWN" )
-))
+    ASIAN = c("ASIAN", "ASIAN - ASIAN INDIAN", "ASIAN - CHINESE", 
+              "ASIAN - KOREAN", "ASIAN - SOUTH EAST ASIAN"),
+    BLACK = c("BLACK/AFRICAN", "BLACK/AFRICAN AMERICAN", "BLACK/CAPE VERDEAN", 
+              "BLACK/CARIBBEAN ISLAND"),
+    HISPANIC = c("HISPANIC OR LATINO", "HISPANIC/LATINO - CENTRAL AMERICAN", 
+                 "HISPANIC/LATINO - CUBAN", "HISPANIC/LATINO - DOMINICAN",
+                 "HISPANIC/LATINO - MEXICAN", "HISPANIC/LATINO - PUERTO RICAN", 
+                 "HISPANIC/LATINO - SALVADORAN", "HISPANIC/LATINO - COLUMBIAN", 
+                 "HISPANIC/LATINO - GUATEMALAN", "HISPANIC/LATINO - HONDURAN"),
+    WHITE = c("WHITE", "WHITE - BRAZILIAN", "WHITE - EASTERN EUROPEAN", 
+              "WHITE - RUSSIAN", "WHITE - OTHER EUROPEAN"),
+    Other = c("Other", "AMERICAN INDIAN/ALASKA NATIVE", 
+              "NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER", "PORTUGUESE", 
+              "SOUTH AMERICAN", "MULTIPLE RACE/ETHNICITY", 
+              "PATIENT DECLINED TO ANSWER", "UNABLE TO OBTAIN", "UNKNOWN")
+  )
+)
 
 # Step 3: Create a new variable los_long
 mimic_icu_cohort <- mutate(
@@ -212,23 +222,29 @@ mimic_icu_cohort <- mutate(
 
 # Step 4: Summarize the data using tbl_summary(), stratified by los_long
 mimic_icu_cohort <- mimic_icu_cohort %>%
-  mutate(`Non Invasive Blood Pressure systolic` = as.numeric(`Non Invasive Blood Pressure systolic`),
-    `Non Invasive Blood Pressure diastolic` = as.numeric(`Non Invasive Blood Pressure diastolic`),
+  mutate(
+    `Non Invasive Blood Pressure systolic` = 
+      as.numeric(`Non Invasive Blood Pressure systolic`),
+    `Non Invasive Blood Pressure diastolic` = 
+      as.numeric(`Non Invasive Blood Pressure diastolic`),
     `Respiratory Rate` = as.numeric(`Respiratory Rate`),
     `Heart Rate` = as.numeric(`Heart Rate`),
     `Temperature Fahrenheit` = as.numeric(`Temperature Fahrenheit`)
-         )
- 
-mimic_icu_cohort_subset <- mimic_icu_cohort %>%
-                                  select(-subject_id, -hadm_id,
-                                  -stay_id,-admit_provider_id,
-                                  -intime, -outtime, -admittime, 
-                                  -dischtime, -deathtime, -edregtime,
-                                  -edouttime,-anchor_age,
-                                  -anchor_year,-anchor_year_group)
+  )
 
-summary_table <- tbl_summary(mimic_icu_cohort_subset, 
-                             by = los_long)
+mimic_icu_cohort_subset <- mimic_icu_cohort %>%
+  select(
+    -subject_id, -hadm_id,
+    -stay_id, -admit_provider_id,
+    -intime, -outtime, -admittime,
+    -dischtime, -deathtime, -edregtime,
+    -edouttime, -anchor_age,
+    -anchor_year, -anchor_year_group
+  )
+
+summary_table <- tbl_summary(mimic_icu_cohort_subset,
+  by = los_long
+)
 
 summary_table
 ```
@@ -275,187 +291,215 @@ library(bigrquery)
 
 mimic_icu_cohort <- readRDS("mimic_icu_cohort.rds")
 
-ui <- navbarPage("",
-                 tabPanel("Paitients Characteristics",
-                          selectInput("characteristic", "Variable of interest", 
-                                      choices=c("First care unit" = "first_careunit",
-                                                "Last care unit" = "last_careunit",
-                                                "Gender" = "gender",
-                                                "Age intime" = "age_intime",
-                                                "Admission Type" = "admission_type",
-                                                "Admission Location" = "admission_location",
-                                                "Discharge Location" = "discharge_location",
-                                                "Insurance" = "insurance",
-                                                "Language" = "language",
-                                                "Marital status" = "marital_status",
-                                                "Race" = "race",
-                                                "Lab Events",
-                                                "Vitals",
-                                                "Hospital Expire" = "hospital_expire_flag")),
-                          checkboxInput("outliers", "Remove Outliers in IQR method for 
+ui <- navbarPage(
+  "",
+  tabPanel(
+    "Paitients Characteristics",
+    selectInput("characteristic", "Variable of interest",
+      choices = c(
+        "First care unit" = "first_careunit",
+        "Last care unit" = "last_careunit",
+        "Gender" = "gender",
+        "Age intime" = "age_intime",
+        "Admission Type" = "admission_type",
+        "Admission Location" = "admission_location",
+        "Discharge Location" = "discharge_location",
+        "Insurance" = "insurance",
+        "Language" = "language",
+        "Marital status" = "marital_status",
+        "Race" = "race",
+        "Lab Events",
+        "Vitals",
+        "Hospital Expire" = "hospital_expire_flag"
+      )
+    ),
+    checkboxInput("outliers", "Remove Outliers in IQR method for
                          measurements?", value = FALSE),
-                          plotOutput("plot1")
-                 ),
-                 tabPanel("Paient's ADT and ICU stay Information",
-                          tags$div(
-                            style = "color: gray; margin-bottom: 10px;",
-                            "Please select a patient ID"),
-                          selectInput("patient", "Patient ID",
-                                      choices = c(10000032,10000980,
-                                                  10001217,10001725,10001884)),
-                          plotOutput("plot2"))
-                 )
+    plotOutput("plot1")
+  ),
+  tabPanel(
+    "Paient's ADT and ICU stay Information",
+    tags$div(
+      style = "color: gray; margin-bottom: 10px;",
+      "Please select a patient ID"
+    ),
+    selectInput("patient", "Patient ID",
+      choices = c(
+        10000032, 10000980,
+        10001217, 10001725, 10001884
+      )
+    ),
+    plotOutput("plot2")
+  )
+)
 
 
 server <- function(input, output) {
-  
   satoken <- "biostat-203b-2024-winter-313290ce47a6.json"
   bq_auth(path = satoken)
-  
+
   con_bq <- dbConnect(
     bigrquery::bigquery(),
     project = "biostat-203b-2024-winter",
     dataset = "mimic4_v2_2",
     billing = "biostat-203b-2024-winter"
   )
-  
+
   output$plot1 <- renderPlot({
     if (input$characteristic == "Lab Events") {
-      selected_columns <- c("Creatinine", "Potassium", "Sodium",
-                            "Chloride","Bicarbonate","Hematocrit",
-                            "White Blood Cells","Glucose")
-      
+      selected_columns <- c(
+        "Creatinine", "Potassium", "Sodium",
+        "Chloride", "Bicarbonate", "Hematocrit",
+        "White Blood Cells", "Glucose"
+      )
+
       if (input$outliers) {
         data <- mimic_icu_cohort[selected_columns] %>%
           gather(key = "Lab_Event", value = "Value") %>%
           filter(!is.na(Value)) %>%
-          filter(Value >= 
-                   quantile(Value, 0.25, na.rm = TRUE) - 1.5*IQR(Value) & 
-                   Value <= quantile(Value, 0.75, na.rm = TRUE) + 1.5*IQR(Value))
-      } 
-      else {
+          filter(Value >=
+            quantile(Value, 0.25, na.rm = TRUE) - 1.5 * IQR(Value) &
+            Value <= quantile(Value, 0.75, na.rm = TRUE) + 1.5 * IQR(Value))
+      } else {
         data <- mimic_icu_cohort[selected_columns] %>%
           gather(key = "Lab_Event", value = "Value")
       }
-      
+
       ggplot(data, aes(x = Value, y = Lab_Event)) +
         geom_boxplot() +
         labs(x = "value", y = "variable") +
         theme_minimal()
-    }
-    
-    else if (input$characteristic == "Vitals"){
-      selected_columns <- c("Heart Rate", "Respiratory Rate", "Non Invasive Blood Pressure systolic",
-                            "Non Invasive Blood Pressure diastolic","Temperature Fahrenheit")
-      
+    } else if (input$characteristic == "Vitals") {
+      selected_columns <- c(
+        "Heart Rate", "Respiratory Rate", 
+        "Non Invasive Blood Pressure systolic",
+        "Non Invasive Blood Pressure diastolic", 
+        "Temperature Fahrenheit"
+      )
+
       if (input$outliers) {
         data <- mimic_icu_cohort[selected_columns] %>%
           gather(key = "Vitals", value = "Value") %>%
           filter(!is.na(Value)) %>%
-          filter(Value >= quantile(Value, 0.25, na.rm = TRUE) - 1.5*IQR(Value) 
-                 & Value <= quantile(Value, 0.75, na.rm = TRUE) + 1.5*IQR(Value))
-      } 
-      else {
+          filter(Value >= quantile(Value, 0.25, na.rm = TRUE) 
+                 - 1.5 * IQR(Value) &
+            Value <= quantile(Value, 0.75, na.rm = TRUE) 
+            + 1.5 * IQR(Value))
+      } else {
         data <- mimic_icu_cohort[selected_columns] %>%
           gather(key = "Vitals", value = "Value")
       }
-      
+
       ggplot(data, aes(x = Value, y = Vitals)) +
         geom_boxplot() +
         labs(x = "value", y = "variable") +
         theme_minimal()
-    }
-    
-    else {
+    } else {
       characteristic_data <- table(mimic_icu_cohort[[input$characteristic]])
       par(mar = c(5, 30, 4, 2) + 0.1)
-      barplot(characteristic_data, 
-              horiz = TRUE,
-              main = "Patient count by stay or patient variable group",
-              ylab = input$characteristic,
-              xlab = "Count",
-              las = 2)
+      barplot(characteristic_data,
+        horiz = TRUE,
+        main = "Patient count by stay or patient variable group",
+        ylab = input$characteristic,
+        xlab = "Count",
+        las = 2
+      )
     }
   })
-  
+
   output$plot2 <- renderPlot({
     id <- as.numeric(input$patient)
-    
-    transfers <- tbl(con_bq,"transfers")|>
-      filter(subject_id == id)|>
-      mutate(intime = as.POSIXct(intime),outtime = as.POSIXct(outtime))|>
-      filter(eventtype != "discharge")|>
+
+    transfers <- tbl(con_bq, "transfers") |>
+      filter(subject_id == id) |>
+      mutate(intime = as.POSIXct(intime), outtime = as.POSIXct(outtime)) |>
+      filter(eventtype != "discharge") |>
       collect()
-    
-    patients <- tbl(con_bq,"patients")|>
+
+    patients <- tbl(con_bq, "patients") |>
       filter(subject_id == id) |>
       collect()
-    
-    admissions <-tbl(con_bq,"admissions")|>
-      filter(subject_id == id)|>
-      mutate(admittime = as.POSIXct(admittime),
-             dischtime = as.POSIXct(dischtime)) |>
+
+    admissions <- tbl(con_bq, "admissions") |>
+      filter(subject_id == id) |>
+      mutate(
+        admittime = as.POSIXct(admittime),
+        dischtime = as.POSIXct(dischtime)
+      ) |>
       collect()
-    
-    labevents <- tbl(con_bq,"labevents")|>
-      filter(subject_id == id)|>
+
+    labevents <- tbl(con_bq, "labevents") |>
+      filter(subject_id == id) |>
       mutate(charttime = as.POSIXct(charttime)) |>
       collect()
-    
-    procedures_icd <- tbl(con_bq,"procedures_icd")%>%
-      filter(subject_id == id)%>%
-      mutate(chartdate = as.POSIXct(chartdate))%>%
+
+    procedures_icd <- tbl(con_bq, "procedures_icd") %>%
+      filter(subject_id == id) %>%
+      mutate(chartdate = as.POSIXct(chartdate)) %>%
       left_join(
-        tbl(con_bq, "d_icd_procedures", show_col_types = FALSE) |> 
-          select(icd_code,long_title),
-        by = "icd_code") |>
+        tbl(con_bq, "d_icd_procedures", show_col_types = FALSE) |>
+          select(icd_code, long_title),
+        by = "icd_code"
+      ) |>
       collect()
-    
-    diagnoses_icd <- tbl(con_bq,"diagnoses_icd")%>%
+
+    diagnoses_icd <- tbl(con_bq, "diagnoses_icd") %>%
       left_join(
-        tbl(con_bq, "d_icd_diagnoses", show_col_types = FALSE) |> 
-          select(icd_code,long_title),
-        by = "icd_code") |>
-      filter(subject_id==id)|>
+        tbl(con_bq, "d_icd_diagnoses", show_col_types = FALSE) |>
+          select(icd_code, long_title),
+        by = "icd_code"
+      ) |>
+      filter(subject_id == id) |>
       collect()
-    
+
     top_diagnoses <- diagnoses_icd |>
       arrange(seq_num) |>
       distinct(long_title, .keep_all = TRUE) |>
       slice_head(n = 3) |>
       pull(long_title) |>
       paste(collapse = "\n")
-    
-    patient_title <- paste("Patient ",id,  
-                           ", ", dplyr::pull(patients, gender), 
-                           ", ", dplyr::pull(patients, anchor_age), 
-                           " years old, ", 
-                           tolower(dplyr::pull(admissions, race)), sep = "")
-    
+
+    patient_title <- paste("Patient ", id,
+      ", ", dplyr::pull(patients, gender),
+      ", ", dplyr::pull(patients, anchor_age),
+      " years old, ",
+      tolower(dplyr::pull(admissions, race)),
+      sep = ""
+    )
+
     is_ICU_CCU <- str_detect(transfers$careunit, "ICU|CCU")
-    
+
     ggplot() +
-      geom_segment(data =  transfers |> collect(), aes(x = intime, xend = outtime,
-                                                       y = "ADT", yend = "ADT",
-                                                       color = careunit,
-                                                       linewidth= is_ICU_CCU)) +
-      geom_point(data = procedures_icd |> collect(), aes(x = chartdate, y = "Procedure", shape=long_title)) +
-      geom_point(data = labevents |> collect(), aes(x = charttime, y = "Lab"),
-                 shape = 3) +
+      geom_segment(data = transfers |> collect(), aes(
+        x = intime, xend = outtime,
+        y = "ADT", yend = "ADT",
+        color = careunit,
+        linewidth = is_ICU_CCU
+      )) +
+      geom_point(data = procedures_icd |> collect(), 
+                 aes(x = chartdate, y = "Procedure", shape = long_title)) +
+      geom_point(
+        data = labevents |> collect(), aes(x = charttime, y = "Lab"),
+        shape = 3
+      ) +
       theme_bw(base_size = 7) +
       theme(legend.position = "bottom", legend.box = "vertical") +
       scale_y_discrete(limits = c("Procedure", "Lab", "ADT")) +
-      labs(title = patient_title, subtitle = top_diagnoses,
-           x = "Calendar", y = "Event Type", color = "Care Unit",shape="Procedure") +
+      labs(
+        title = patient_title, subtitle = top_diagnoses,
+        x = "Calendar", y = "Event Type", color = "Care Unit",
+        shape = "Procedure"
+      ) +
       guides(linewidth = FALSE) +
-      scale_x_datetime(date_labels = "%b %d")+
-      geom_point(data = procedures_icd |> collect(), 
-                 aes(x = chartdate, y = "Procedure", shape=long_title)) +
-      scale_shape_manual(values = c(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12))
+      scale_x_datetime(date_labels = "%b %d") +
+      geom_point(
+        data = procedures_icd |> collect(),
+        aes(x = chartdate, y = "Procedure", shape = long_title)
+      ) +
+      scale_shape_manual(values = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
   })
 }
 
 # Run the application
 shinyApp(ui = ui, server = server)
-
 ```
