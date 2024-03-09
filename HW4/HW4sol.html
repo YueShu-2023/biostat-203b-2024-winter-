@@ -3101,7 +3101,11 @@ loaded via a namespace (and not attached):
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>memuse<span class="sc">::</span><span class="fu">Sys.meminfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Totalram:  31.332 GiB 
+<<<<<<< HEAD
 Freeram:   29.380 GiB </code></pre>
+=======
+Freeram:   29.222 GiB </code></pre>
+>>>>>>> develop
 </div>
 </div>
 <p>Load database libraries and the tidyverse frontend:</p>
@@ -3112,7 +3116,11 @@ Freeram:   29.380 GiB </code></pre>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
+<<<<<<< HEAD
 <pre><code>#StandWithUkraine</code></pre>
+=======
+<pre><code>#BlackLivesMatter</code></pre>
+>>>>>>> develop
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -3139,7 +3147,11 @@ Freeram:   29.380 GiB </code></pre>
 <h3 class="anchored" data-anchor-id="q1.1-connect-to-bigquery">Q1.1 Connect to BigQuery</h3>
 <p>Authenticate with BigQuery using the service account token. Please place the service account token (shared via BruinLearn) in the working directory (same folder as your qmd file). Do <strong>not</strong> add this token to your git repository.</p>
 <div class="cell">
+<<<<<<< HEAD
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># path to the service account token</span></span>
+=======
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># path to the service account token </span></span>
+>>>>>>> develop
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>satoken <span class="ot">&lt;-</span> <span class="st">&quot;biostat-203b-2024-winter-313290ce47a6.json&quot;</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># BigQuery authentication using service account</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bq_auth</span>(<span class="at">path =</span> satoken)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3148,10 +3160,17 @@ Freeram:   29.380 GiB </code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># connect to the BigQuery database `biostat-203b-2024-winter.mimic4_v2_2`</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>con_bq <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(</span>
+<<<<<<< HEAD
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  bigrquery<span class="sc">::</span><span class="fu">bigquery</span>(),</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">project =</span> <span class="st">&quot;biostat-203b-2024-winter&quot;</span>,</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dataset =</span> <span class="st">&quot;mimic4_v2_2&quot;</span>,</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">billing =</span> <span class="st">&quot;biostat-203b-2024-winter&quot;</span></span>
+=======
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    bigrquery<span class="sc">::</span><span class="fu">bigquery</span>(),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">project =</span> <span class="st">&quot;biostat-203b-2024-winter&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dataset =</span> <span class="st">&quot;mimic4_v2_2&quot;</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">billing =</span> <span class="st">&quot;biostat-203b-2024-winter&quot;</span></span>
+>>>>>>> develop
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>con_bq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -3221,7 +3240,11 @@ Freeram:   29.380 GiB </code></pre>
 <h3 class="anchored" data-anchor-id="q1.3-admissions-data">Q1.3 <code>admissions</code> data</h3>
 <p>Connect to the <code>admissions</code> table.</p>
 <div class="cell">
+<<<<<<< HEAD
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>admissions_tble <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con_bq, <span class="st">&quot;admissions&quot;</span>) <span class="sc">|&gt;</span></span>
+=======
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a> admissions_tble <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con_bq, <span class="st">&quot;admissions&quot;</span>) <span class="sc">|&gt;</span></span>
+>>>>>>> develop
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># show_query() |&gt;</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -3295,7 +3318,11 @@ Freeram:   29.380 GiB </code></pre>
 <h3 class="anchored" data-anchor-id="q1.4-patients-data">Q1.4 <code>patients</code> data</h3>
 <p>Connect to the <code>patients</code> table.</p>
 <div class="cell">
+<<<<<<< HEAD
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>patients_tble <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con_bq, <span class="st">&quot;patients&quot;</span>) <span class="sc">|&gt;</span></span>
+=======
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>patients_tble <span class="ot">&lt;-</span><span class="fu">tbl</span>(con_bq, <span class="st">&quot;patients&quot;</span>) <span class="sc">|&gt;</span></span>
+>>>>>>> develop
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># show_query() |&gt;</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -3323,6 +3350,7 @@ Freeram:   29.380 GiB </code></pre>
 <p><strong>Answer:</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>lab_subset <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con_bq, <span class="st">&quot;labevents&quot;</span>) <span class="sc">|&gt;</span></span>
+<<<<<<< HEAD
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(subject_id, itemid, valuenum, storetime) <span class="sc">|&gt;</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(icustays_tble, <span class="at">by =</span> <span class="st">&quot;subject_id&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(itemid <span class="sc">%in%</span> <span class="fu">c</span>(</span>
@@ -3343,6 +3371,25 @@ Freeram:   29.380 GiB </code></pre>
 <span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> label, <span class="at">values_from =</span> valuenum) <span class="sc">|&gt;</span></span>
 <span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subject_id, stay_id) <span class="sc">|&gt;</span></span>
 <span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(subject_id, itemid, valuenum, storetime) <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(icustays_tble, <span class="at">by =</span> <span class="st">&quot;subject_id&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(itemid <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">50912</span>, <span class="dv">50971</span>, <span class="dv">50983</span>, <span class="dv">50902</span>, </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">50882</span>, <span class="dv">51221</span>, <span class="dv">51301</span>, <span class="dv">50931</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tbl</span>(con_bq, <span class="st">&quot;d_labitems&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">select</span>(itemid, label),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">by =</span> <span class="st">&quot;itemid&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(subject_id, stay_id, label, valuenum, storetime, intime) <span class="sc">|&gt;</span> </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(storetime <span class="sc">&lt;</span> intime) <span class="sc">|&gt;</span> </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(stay_id, label) <span class="sc">|&gt;</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">order_by =</span> storetime, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(subject_id, stay_id, label, valuenum) <span class="sc">|&gt;</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> label, <span class="at">values_from =</span> valuenum) <span class="sc">|&gt;</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(subject_id, stay_id) <span class="sc">|&gt;</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> develop
 <div class="cell-output cell-output-stdout">
 <pre><code># Source:     SQL [?? x 10]
 # Database:   BigQueryConnection
@@ -3381,6 +3428,7 @@ Freeram:   29.380 GiB </code></pre>
 <p><strong>Answer:</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>chartevents_subset <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con_bq, <span class="st">&quot;chartevents&quot;</span>) <span class="sc">|&gt;</span></span>
+<<<<<<< HEAD
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(subject_id, itemid, value, storetime) <span class="sc">|&gt;</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(icustays_tble, <span class="at">by =</span> <span class="st">&quot;subject_id&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(itemid <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">220045</span>, <span class="dv">220179</span>, <span class="dv">220180</span>, <span class="dv">223761</span>, <span class="dv">220210</span>)) <span class="sc">|&gt;</span></span>
@@ -3398,6 +3446,24 @@ Freeram:   29.380 GiB </code></pre>
 <span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> label, <span class="at">values_from =</span> value) <span class="sc">|&gt;</span></span>
 <span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subject_id, stay_id) <span class="sc">|&gt;</span></span>
 <span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(subject_id, itemid, value, storetime) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(icustays_tble, <span class="at">by =</span> <span class="st">&quot;subject_id&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(itemid <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">220045</span>, <span class="dv">220179</span>, <span class="dv">220180</span>, <span class="dv">223761</span>, <span class="dv">220210</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tbl</span>(con_bq, <span class="st">&quot;d_items&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">select</span>(itemid, label),</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">by =</span> <span class="st">&quot;itemid&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(subject_id, stay_id, label, value, storetime, intime,outtime) <span class="sc">|&gt;</span> </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(storetime <span class="sc">&gt;=</span> intime <span class="sc">&amp;</span> storetime <span class="sc">&lt;=</span> outtime)<span class="sc">|&gt;</span> </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(stay_id, label) <span class="sc">|&gt;</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_min</span>(<span class="at">order_by =</span> storetime, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(subject_id, stay_id, label, value) <span class="sc">|&gt;</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> label, <span class="at">values_from =</span> value) <span class="sc">|&gt;</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(subject_id, stay_id) <span class="sc">|&gt;</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> develop
 <div class="cell-output cell-output-stdout">
 <pre><code># Source:     SQL [?? x 7]
 # Database:   BigQueryConnection
@@ -3451,10 +3517,17 @@ Freeram:   29.380 GiB </code></pre>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(patients_tble, <span class="at">by =</span> <span class="st">&quot;subject_id&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_intime =</span> <span class="fu">year</span>(intime) <span class="sc">-</span> anchor_year <span class="sc">+</span> anchor_age) <span class="sc">|&gt;</span></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age_intime <span class="sc">&gt;=</span> <span class="dv">18</span>) <span class="sc">|&gt;</span></span>
+<<<<<<< HEAD
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(admissions_tble, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;subject_id&quot;</span>, <span class="st">&quot;hadm_id&quot;</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(lab_subset, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;subject_id&quot;</span>, <span class="st">&quot;stay_id&quot;</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(chartevents_subset, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;subject_id&quot;</span>, <span class="st">&quot;stay_id&quot;</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subject_id, hadm_id, stay_id) <span class="sc">|&gt;</span></span>
+=======
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(admissions_tble, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;subject_id&quot;</span>,<span class="st">&quot;hadm_id&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(lab_subset, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;subject_id&quot;</span>,<span class="st">&quot;stay_id&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(chartevents_subset, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;subject_id&quot;</span>,<span class="st">&quot;stay_id&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subject_id,hadm_id,stay_id) <span class="sc">|&gt;</span></span>
+>>>>>>> develop
 <span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
 <span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -3659,11 +3732,19 @@ ORDER BY is ignored in subqueries without LIMIT
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Lump infrequent levels into &quot;Other&quot; level</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort <span class="ot">&lt;-</span> mimic_icu_cohort <span class="sc">%&gt;%</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<<<<<<< HEAD
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">first_careunit =</span> <span class="fu">fct_lump</span>(first_careunit, <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">last_careunit =</span> <span class="fu">fct_lump</span>(last_careunit, <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">admission_type =</span> <span class="fu">fct_lump</span>(admission_type, <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">admission_location =</span> <span class="fu">fct_lump</span>(admission_location, <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">discharge_location =</span> <span class="fu">fct_lump</span>(discharge_location, <span class="at">prop =</span> <span class="fl">0.05</span>)</span>
+=======
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">first_careunit =</span> <span class="fu">fct_lump</span>(first_careunit,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">last_careunit =</span> <span class="fu">fct_lump</span>(last_careunit,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">admission_type =</span> <span class="fu">fct_lump</span>(admission_type,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">admission_location =</span> <span class="fu">fct_lump</span>(admission_location,  <span class="at">prop =</span> <span class="fl">0.05</span>),</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">discharge_location =</span> <span class="fu">fct_lump</span>(discharge_location,  <span class="at">prop =</span> <span class="fl">0.05</span>)</span>
+>>>>>>> develop
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Collapse the levels of race</span></span>
@@ -3671,6 +3752,7 @@ ORDER BY is ignored in subqueries without LIMIT
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  mimic_icu_cohort,</span>
 <span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">race =</span> <span class="fu">fct_collapse</span>(</span>
 <span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    race,</span>
+<<<<<<< HEAD
 <span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">ASIAN =</span> <span class="fu">c</span>(<span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;ASIAN - ASIAN INDIAN&quot;</span>, <span class="st">&quot;ASIAN - CHINESE&quot;</span>, </span>
 <span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;ASIAN - KOREAN&quot;</span>, <span class="st">&quot;ASIAN - SOUTH EAST ASIAN&quot;</span>),</span>
 <span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">BLACK =</span> <span class="fu">c</span>(<span class="st">&quot;BLACK/AFRICAN&quot;</span>, <span class="st">&quot;BLACK/AFRICAN AMERICAN&quot;</span>, <span class="st">&quot;BLACK/CAPE VERDEAN&quot;</span>, </span>
@@ -3688,6 +3770,24 @@ ORDER BY is ignored in subqueries without LIMIT
 <span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;PATIENT DECLINED TO ANSWER&quot;</span>, <span class="st">&quot;UNABLE TO OBTAIN&quot;</span>, <span class="st">&quot;UNKNOWN&quot;</span>)</span>
 <span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">ASIAN =</span> <span class="fu">c</span>(<span class="st">&quot;ASIAN&quot;</span>,<span class="st">&quot;ASIAN - ASIAN INDIAN&quot;</span>,<span class="st">&quot;ASIAN - CHINESE&quot;</span>,</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;ASIAN - KOREAN&quot;</span>,<span class="st">&quot;ASIAN - SOUTH EAST ASIAN&quot;</span>),</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">BLACK =</span> <span class="fu">c</span>(<span class="st">&quot;BLACK/AFRICAN&quot;</span>, <span class="st">&quot;BLACK/AFRICAN AMERICAN&quot;</span>, </span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;BLACK/CAPE VERDEAN&quot;</span>, <span class="st">&quot;BLACK/CARIBBEAN ISLAND&quot;</span>),</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">HISPANIC =</span> <span class="fu">c</span>(<span class="st">&quot;HISPANIC OR LATINO&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - CENTRAL AMERICAN&quot;</span>,</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;HISPANIC/LATINO - CUBAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - DOMINICAN&quot;</span>,</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;HISPANIC/LATINO - MEXICAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - PUERTO RICAN&quot;</span>,</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;HISPANIC/LATINO - SALVADORAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - COLUMBIAN&quot;</span>,</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;HISPANIC/LATINO - GUATEMALAN&quot;</span>,<span class="st">&quot;HISPANIC/LATINO - HONDURAN&quot;</span>),</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">WHITE =</span> <span class="fu">c</span>(<span class="st">&quot;WHITE&quot;</span>,<span class="st">&quot;WHITE - BRAZILIAN&quot;</span>,<span class="st">&quot;WHITE - EASTERN EUROPEAN&quot;</span>,</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;WHITE - RUSSIAN&quot;</span>,<span class="st">&quot;WHITE - OTHER EUROPEAN&quot;</span>),</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">Other =</span> <span class="fu">c</span>(<span class="st">&quot;Other&quot;</span> , <span class="st">&quot;AMERICAN INDIAN/ALASKA NATIVE&quot;</span>,</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER&quot;</span>,<span class="st">&quot;PORTUGUESE&quot;</span>,</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;SOUTH AMERICAN&quot;</span>,<span class="st">&quot;MULTIPLE RACE/ETHNICITY&quot;</span>,</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;PATIENT DECLINED TO ANSWER&quot;</span>,<span class="st">&quot;UNABLE TO OBTAIN&quot;</span>,<span class="st">&quot;UNKNOWN&quot;</span> )</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> develop
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: There was 1 warning in `mutate()`.
 ℹ In argument: `race = fct_collapse(...)`.
@@ -3702,6 +3802,7 @@ Caused by warning:
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Summarize the data using tbl_summary(), stratified by los_long</span></span>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort <span class="ot">&lt;-</span> mimic_icu_cohort <span class="sc">%&gt;%</span></span>
+<<<<<<< HEAD
 <span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Non Invasive Blood Pressure systolic</span><span class="st">`</span> <span class="ot">=</span> </span>
 <span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure systolic</span><span class="st">`</span>),</span>
@@ -3731,10 +3832,38 @@ Caused by warning:
 
 <div id="pdlzfcdtqm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#pdlzfcdtqm table {
+=======
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure systolic</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>           <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure systolic</span><span class="st">`</span>),</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Non Invasive Blood Pressure diastolic</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Non Invasive Blood Pressure diastolic</span><span class="st">`</span>),</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Respiratory Rate</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Respiratory Rate</span><span class="st">`</span>),</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Heart Rate</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Heart Rate</span><span class="st">`</span>),</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Temperature Fahrenheit</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Temperature Fahrenheit</span><span class="st">`</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>mimic_icu_cohort_subset <span class="ot">&lt;-</span> mimic_icu_cohort <span class="sc">%&gt;%</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">select</span>(<span class="sc">-</span>subject_id, <span class="sc">-</span>hadm_id,</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>stay_id,<span class="sc">-</span>admit_provider_id,</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>intime, <span class="sc">-</span>outtime, <span class="sc">-</span>admittime, </span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>dischtime, <span class="sc">-</span>deathtime, <span class="sc">-</span>edregtime,</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>edouttime,<span class="sc">-</span>anchor_age,</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>                                  <span class="sc">-</span>anchor_year,<span class="sc">-</span>anchor_year_group)</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> <span class="fu">tbl_summary</span>(mimic_icu_cohort_subset, </span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>                             <span class="at">by =</span> los_long)</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>summary_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="ubjwrcdjqc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ubjwrcdjqc table {
+>>>>>>> develop
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm thead, #pdlzfcdtqm tbody, #pdlzfcdtqm tfoot, #pdlzfcdtqm tr, #pdlzfcdtqm td, #pdlzfcdtqm th {
 border-style: none;
 }
@@ -3743,6 +3872,16 @@ margin: 0;
 padding: 0;
 }
 #pdlzfcdtqm .gt_table {
+=======
+#ubjwrcdjqc thead, #ubjwrcdjqc tbody, #ubjwrcdjqc tfoot, #ubjwrcdjqc tr, #ubjwrcdjqc td, #ubjwrcdjqc th {
+border-style: none;
+}
+#ubjwrcdjqc p {
+margin: 0;
+padding: 0;
+}
+#ubjwrcdjqc .gt_table {
+>>>>>>> develop
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -3767,11 +3906,19 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
 #pdlzfcdtqm .gt_title {
+=======
+#ubjwrcdjqc .gt_caption {
+padding-top: 4px;
+padding-bottom: 4px;
+}
+#ubjwrcdjqc .gt_title {
+>>>>>>> develop
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -3782,7 +3929,11 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_subtitle {
+=======
+#ubjwrcdjqc .gt_subtitle {
+>>>>>>> develop
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3793,7 +3944,11 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_heading {
+=======
+#ubjwrcdjqc .gt_heading {
+>>>>>>> develop
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3804,12 +3959,20 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_bottom_border {
+=======
+#ubjwrcdjqc .gt_bottom_border {
+>>>>>>> develop
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_col_headings {
+=======
+#ubjwrcdjqc .gt_col_headings {
+>>>>>>> develop
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3823,7 +3986,11 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_col_heading {
+=======
+#ubjwrcdjqc .gt_col_heading {
+>>>>>>> develop
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3842,7 +4009,11 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_column_spanner_outer {
+=======
+#ubjwrcdjqc .gt_column_spanner_outer {
+>>>>>>> develop
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3853,6 +4024,7 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
@@ -3860,6 +4032,15 @@ padding-left: 0;
 padding-right: 0;
 }
 #pdlzfcdtqm .gt_column_spanner {
+=======
+#ubjwrcdjqc .gt_column_spanner_outer:first-child {
+padding-left: 0;
+}
+#ubjwrcdjqc .gt_column_spanner_outer:last-child {
+padding-right: 0;
+}
+#ubjwrcdjqc .gt_column_spanner {
+>>>>>>> develop
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3870,10 +4051,17 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_spanner_row {
 border-bottom-style: hidden;
 }
 #pdlzfcdtqm .gt_group_heading {
+=======
+#ubjwrcdjqc .gt_spanner_row {
+border-bottom-style: hidden;
+}
+#ubjwrcdjqc .gt_group_heading {
+>>>>>>> develop
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3898,7 +4086,11 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_empty_group_heading {
+=======
+#ubjwrcdjqc .gt_empty_group_heading {
+>>>>>>> develop
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3912,6 +4104,7 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_from_md > :first-child {
 margin-top: 0;
 }
@@ -3919,6 +4112,15 @@ margin-top: 0;
 margin-bottom: 0;
 }
 #pdlzfcdtqm .gt_row {
+=======
+#ubjwrcdjqc .gt_from_md > :first-child {
+margin-top: 0;
+}
+#ubjwrcdjqc .gt_from_md > :last-child {
+margin-bottom: 0;
+}
+#ubjwrcdjqc .gt_row {
+>>>>>>> develop
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3936,7 +4138,11 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_stub {
+=======
+#ubjwrcdjqc .gt_stub {
+>>>>>>> develop
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3948,7 +4154,11 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_stub_row_group {
+=======
+#ubjwrcdjqc .gt_stub_row_group {
+>>>>>>> develop
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3961,6 +4171,7 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_row_group_first td {
 border-top-width: 2px;
 }
@@ -3968,6 +4179,15 @@ border-top-width: 2px;
 border-top-width: 2px;
 }
 #pdlzfcdtqm .gt_summary_row {
+=======
+#ubjwrcdjqc .gt_row_group_first td {
+border-top-width: 2px;
+}
+#ubjwrcdjqc .gt_row_group_first th {
+border-top-width: 2px;
+}
+#ubjwrcdjqc .gt_summary_row {
+>>>>>>> develop
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3976,6 +4196,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
@@ -3984,6 +4205,16 @@ border-top-color: #D3D3D3;
 border-top-width: 2px;
 }
 #pdlzfcdtqm .gt_last_summary_row {
+=======
+#ubjwrcdjqc .gt_first_summary_row {
+border-top-style: solid;
+border-top-color: #D3D3D3;
+}
+#ubjwrcdjqc .gt_first_summary_row.thick {
+border-top-width: 2px;
+}
+#ubjwrcdjqc .gt_last_summary_row {
+>>>>>>> develop
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3992,7 +4223,11 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_grand_summary_row {
+=======
+#ubjwrcdjqc .gt_grand_summary_row {
+>>>>>>> develop
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -4001,7 +4236,11 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_first_grand_summary_row {
+=======
+#ubjwrcdjqc .gt_first_grand_summary_row {
+>>>>>>> develop
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4010,7 +4249,11 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_last_grand_summary_row_top {
+=======
+#ubjwrcdjqc .gt_last_grand_summary_row_top {
+>>>>>>> develop
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4019,10 +4262,17 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
 #pdlzfcdtqm .gt_table_body {
+=======
+#ubjwrcdjqc .gt_striped {
+background-color: rgba(128, 128, 128, 0.05);
+}
+#ubjwrcdjqc .gt_table_body {
+>>>>>>> develop
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -4030,7 +4280,11 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_footnotes {
+=======
+#ubjwrcdjqc .gt_footnotes {
+>>>>>>> develop
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -4043,7 +4297,11 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_footnote {
+=======
+#ubjwrcdjqc .gt_footnote {
+>>>>>>> develop
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -4051,7 +4309,11 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_sourcenotes {
+=======
+#ubjwrcdjqc .gt_sourcenotes {
+>>>>>>> develop
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -4064,13 +4326,18 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_sourcenote {
+=======
+#ubjwrcdjqc .gt_sourcenote {
+>>>>>>> develop
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_left {
 text-align: left;
 }
@@ -4094,10 +4361,36 @@ font-style: italic;
 font-size: 65%;
 }
 #pdlzfcdtqm .gt_footnote_marks {
+=======
+#ubjwrcdjqc .gt_left {
+text-align: left;
+}
+#ubjwrcdjqc .gt_center {
+text-align: center;
+}
+#ubjwrcdjqc .gt_right {
+text-align: right;
+font-variant-numeric: tabular-nums;
+}
+#ubjwrcdjqc .gt_font_normal {
+font-weight: normal;
+}
+#ubjwrcdjqc .gt_font_bold {
+font-weight: bold;
+}
+#ubjwrcdjqc .gt_font_italic {
+font-style: italic;
+}
+#ubjwrcdjqc .gt_super {
+font-size: 65%;
+}
+#ubjwrcdjqc .gt_footnote_marks {
+>>>>>>> develop
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
+<<<<<<< HEAD
 #pdlzfcdtqm .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
@@ -4115,6 +4408,25 @@ text-indent: 15px;
 text-indent: 20px;
 }
 #pdlzfcdtqm .gt_indent_5 {
+=======
+#ubjwrcdjqc .gt_asterisk {
+font-size: 100%;
+vertical-align: 0;
+}
+#ubjwrcdjqc .gt_indent_1 {
+text-indent: 5px;
+}
+#ubjwrcdjqc .gt_indent_2 {
+text-indent: 10px;
+}
+#ubjwrcdjqc .gt_indent_3 {
+text-indent: 15px;
+}
+#ubjwrcdjqc .gt_indent_4 {
+text-indent: 20px;
+}
+#ubjwrcdjqc .gt_indent_5 {
+>>>>>>> develop
 text-indent: 25px;
 }
 </style>
@@ -4436,6 +4748,8 @@ text-indent: 25px;
 <p>Develop a Shiny app for exploring the ICU cohort data created in Q1. The app should reside in the <code>mimiciv_shiny</code> folder. The app should contain at least two tabs. One tab provides easy access to the graphical and numerical summaries of variables (demographics, lab measurements, vitals) in the ICU cohort. The other allows user to choose a specific patient in the cohort and display the patient’s ADT and ICU stay information as we did in Q1 of HW3.</p>
 <p><img src="Q2example1.png" class="img-fluid"> <img src="Q2example2.png" class="img-fluid"></p>
 <p><img src="Q2example3.png" class="img-fluid"></p>
+<p><strong>Answer:</strong></p>
+<p>I put the connect json in the mimiciv_shiny folder as I need to connect the databse in app. And it is very slow to load the picture.</p>
 </section>
 
 </main>

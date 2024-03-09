@@ -1,4 +1,3 @@
----
 title: "Biostat 203B Homework 4"
 subtitle: "Due Mar 8 @ 11:59PM"
 author: "Yue Shu, 106332516"
