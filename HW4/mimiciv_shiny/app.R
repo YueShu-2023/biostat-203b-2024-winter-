@@ -8,22 +8,26 @@ mimic_icu_cohort <- readRDS("mimic_icu_cohort.rds")
 ui <- navbarPage("",
                  tabPanel("Paitients Characteristics",
                           selectInput("characteristic", "Variable of interest", 
-                                      choices=c("First care unit" = "first_careunit",
-                                                "Last care unit" = "last_careunit",
-                                                "Gender" = "gender",
-                                                "Age intime" = "age_intime",
-                                                "Admission Type" = "admission_type",
-                                                "Admission Location" = "admission_location",
-                                                "Discharge Location" = "discharge_location",
-                                                "Insurance" = "insurance",
-                                                "Language" = "language",
-                                                "Marital status" = "marital_status",
-                                                "Race" = "race",
-                                                "Lab Events",
-                                                "Vitals",
-                                                "Hospital Expire" = "hospital_expire_flag")),
-                          checkboxInput("outliers", "Remove Outliers in IQR method for 
-                         measurements?", value = FALSE),
+                                choices=c("First care unit" = "first_careunit",
+                                          "Last care unit" = "last_careunit",
+                                          "Gender" = "gender",
+                                          "Age intime" = "age_intime",
+                                          "Admission Type" = "admission_type",
+                                          "Admission Location" = 
+                                            "admission_location",
+                                          "Discharge Location" = 
+                                            "discharge_location",
+                                          "Insurance" = "insurance",
+                                          "Language" = "language",
+                                          "Marital status" = "marital_status",
+                                          "Race" = "race",
+                                          "Lab Events",
+                                          "Vitals",
+                                          "Hospital Expire" = 
+                                            "hospital_expire_flag")),
+                          checkboxInput("outliers", 
+                          "Remove Outliers in IQR method for measurements?", 
+                          value = FALSE),
                           plotOutput("plot1")
                  ),
                  tabPanel("Paient's ADT and ICU stay Information",
@@ -61,7 +65,8 @@ server <- function(input, output) {
           filter(!is.na(Value)) %>%
           filter(Value >= 
                    quantile(Value, 0.25, na.rm = TRUE) - 1.5*IQR(Value) & 
-                   Value <= quantile(Value, 0.75, na.rm = TRUE) + 1.5*IQR(Value))
+                   Value <= quantile(Value, 0.75, na.rm = TRUE) 
+                 + 1.5*IQR(Value))
       } 
       else {
         data <- mimic_icu_cohort[selected_columns] %>%
@@ -75,15 +80,19 @@ server <- function(input, output) {
     }
     
     else if (input$characteristic == "Vitals"){
-      selected_columns <- c("Heart Rate", "Respiratory Rate", "Non Invasive Blood Pressure systolic",
-                            "Non Invasive Blood Pressure diastolic","Temperature Fahrenheit")
+      selected_columns <- c("Heart Rate", "Respiratory Rate", 
+                            "Non Invasive Blood Pressure systolic",
+                            "Non Invasive Blood Pressure diastolic", 
+                            "Temperature Fahrenheit")
       
       if (input$outliers) {
         data <- mimic_icu_cohort[selected_columns] %>%
           gather(key = "Vitals", value = "Value") %>%
           filter(!is.na(Value)) %>%
-          filter(Value >= quantile(Value, 0.25, na.rm = TRUE) - 1.5*IQR(Value) 
-                 & Value <= quantile(Value, 0.75, na.rm = TRUE) + 1.5*IQR(Value))
+          filter(Value >= 
+                   quantile(Value, 0.25, na.rm = TRUE) - 1.5*IQR(Value) &
+                   Value <= quantile(Value, 0.75, na.rm = TRUE) 
+                 + 1.5*IQR(Value))
       } 
       else {
         data <- mimic_icu_cohort[selected_columns] %>%
@@ -165,18 +174,19 @@ server <- function(input, output) {
     is_ICU_CCU <- str_detect(transfers$careunit, "ICU|CCU")
     
     ggplot() +
-      geom_segment(data =  transfers |> collect(), aes(x = intime, xend = outtime,
-                                                       y = "ADT", yend = "ADT",
-                                                       color = careunit,
-                                                       linewidth= is_ICU_CCU)) +
-      geom_point(data = procedures_icd |> collect(), aes(x = chartdate, y = "Procedure", shape=long_title)) +
-      geom_point(data = labevents |> collect(), aes(x = charttime, y = "Lab"),
-                 shape = 3) +
+      geom_segment(data =  transfers |> collect(), 
+                   aes(x = intime, xend = outtime,y = "ADT", yend = "ADT",
+                       color = careunit,linewidth= is_ICU_CCU)) +
+      geom_point(data = procedures_icd |> collect(), 
+                 aes(x = chartdate, y = "Procedure", shape=long_title)) +
+      geom_point(data = labevents |> collect(), 
+                 aes(x = charttime, y = "Lab"),shape = 3) +
       theme_bw(base_size = 7) +
       theme(legend.position = "bottom", legend.box = "vertical") +
       scale_y_discrete(limits = c("Procedure", "Lab", "ADT")) +
       labs(title = patient_title, subtitle = top_diagnoses,
-           x = "Calendar", y = "Event Type", color = "Care Unit",shape="Procedure") +
+           x = "Calendar", y = "Event Type", 
+           color = "Care Unit",shape="Procedure") +
       guides(linewidth = FALSE) +
       scale_x_datetime(date_labels = "%b %d")+
       geom_point(data = procedures_icd |> collect(), 
