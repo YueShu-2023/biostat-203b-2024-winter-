@@ -122,4 +122,6 @@ final_fit
 # Test metrics
 final_fit |> 
   collect_metrics()
+
+writeRDS("Logistic regression", file = "logistic_regression_model.rds")
 ```
