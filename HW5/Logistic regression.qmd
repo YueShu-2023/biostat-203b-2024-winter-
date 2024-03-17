@@ -1,3 +1,18 @@
+---
+title: "Biostat 203B Homework 5-Logistic Regression"
+subtitle: Due Mar 22 @ 11:59PM
+author: "Yue Shu, 106332516"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: false
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+---
+
 ```{r}
 library(GGally)
 library(gtsummary)
@@ -15,7 +30,7 @@ mimic_icu_cohort <- mimic_icu_cohort %>%
   select(subject_id, hadm_id, stay_id,
          first_careunit,gender,age_intime,
          los_long,admission_type,insurance,
-         race,"Bicarbonate",Creatinine,
+         marital_status,race,"Bicarbonate",Creatinine,
          Potassium,Sodium,Chloride,
          Hematocrit,"White Blood Cells",
          Glucose,"Heart Rate","Respiratory Rate",
@@ -41,7 +56,7 @@ data_split <- initial_split(
   )
 
 mimic_other <- training(data_split)
-dim(mimic_other)
+str(mimic_other)
 
 mimic_test <- testing(data_split)
 dim(mimic_test)
@@ -51,19 +66,20 @@ dim(mimic_test)
 #receipe
 rec <- recipe(los_long ~ ., data = mimic_other) |>
   step_rm(subject_id, hadm_id, stay_id) |>
-  step_dummy(all_nominal_predictors()) |>
-  step_zv(all_numeric_predictors()) |> 
-  step_normalize(all_numeric_predictors()) |>
   step_impute_mean("Non Invasive Blood Pressure diastolic",
                    "Non Invasive Blood Pressure systolic")|>
   step_impute_median("Temperature Fahrenheit",
                      "Respiratory Rate",
                      "Heart Rate")|>
+  step_impute_mode(marital_status)|>
   step_impute_bag(Bicarbonate,Creatinine,
                   Potassium,Sodium,Chloride,
                   Glucose,Hematocrit,
-                  "White Blood Cells")
-
+                  "White Blood Cells") |>
+  step_dummy(all_nominal_predictors()) |>
+  step_zv(all_numeric_predictors()) |> 
+  step_normalize(all_numeric_predictors())
+  
 logit_mod <- 
   logistic_reg(
     penalty = tune(), 
@@ -123,5 +139,5 @@ final_fit
 final_fit |> 
   collect_metrics()
 
-writeRDS("Logistic regression", file = "logistic_regression_model.rds")
+saveRDS(logit_fit,file = "logistic_regression_model.rds")
 ```
