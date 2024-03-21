@@ -1,0 +1,148 @@
+---
+title: "Biostat 203B Homework 5-Random Forest"
+subtitle: Due Mar 22 @ 11:59PM
+author: "Yue Shu, 106332516"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: false
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+---
+
+```{r}
+library(GGally)
+library(gtsummary)
+library(tidyverse)
+library(tidymodels)
+library(glmnet)
+library(ranger)
+library(stacks)
+
+# load data
+mimic_icu_cohort <- readRDS("mimic_icu_cohort.rds")
+
+# data preprocessing
+mimic_icu_cohort <- mimic_icu_cohort %>%
+  mutate(los_long = ifelse(los > 2, "long", "short"))%>%
+  select(subject_id, hadm_id, stay_id,
+         first_careunit,gender,age_intime,
+         los_long,race,marital_status,
+         "Bicarbonate",Creatinine,
+         Potassium,Sodium,Chloride,
+         Hematocrit,"White Blood Cells",
+         Glucose,"Heart Rate","Respiratory Rate",
+         "Temperature Fahrenheit",
+         "Non Invasive Blood Pressure diastolic",
+         "Non Invasive Blood Pressure systolic")
+
+tbl_summary(mimic_icu_cohort,
+  by = los_long
+)
+```
+
+```{r}
+# split data
+set.seed(203)
+mimic_icu_cohort <- mimic_icu_cohort |>
+  arrange(subject_id, hadm_id, stay_id)
+
+data_split <- initial_split(
+  mimic_icu_cohort, 
+  strata = "los_long", 
+  prop = 0.5
+  )
+
+mimic_other <- training(data_split)
+dim(mimic_other)
+
+mimic_test <- testing(data_split)
+dim(mimic_test)
+```
+
+```{r}
+library(vip)
+
+rf_recipe <- 
+  recipe(
+    los_long ~ ., 
+    data = mimic_other
+  ) |>
+  step_rm(subject_id, hadm_id, stay_id) |>
+  step_impute_mean("Non Invasive Blood Pressure diastolic",
+                   "Non Invasive Blood Pressure systolic")|>
+  step_impute_median("Temperature Fahrenheit",
+                     "Respiratory Rate",
+                     "Heart Rate")|>
+  step_impute_mode(marital_status)|>
+  step_impute_bag(Bicarbonate,Creatinine,
+                  Potassium,Sodium,Chloride,
+                  Glucose,Hematocrit,
+                  "White Blood Cells") |>
+  step_dummy(all_nominal_predictors())
+
+rf_mod <- 
+  rand_forest(
+    mode = "classification",
+    mtry = tune(),
+    trees = tune()
+  ) |> 
+  set_engine("ranger", importance = "impurity")
+
+rf_wf <- workflow() |>
+  add_recipe(rf_recipe) |>
+  add_model(rf_mod)
+
+param_grid <- grid_regular(
+  trees(range = c(500L, 850L)), 
+  mtry(range = c(1L, 3L)),
+  levels = c(5, 5)
+  )
+
+set.seed(1)
+folds <- vfold_cv(mimic_other, v = 5)
+
+rf_fit <- rf_wf |>
+  tune_grid(
+    resamples = folds,
+    grid = param_grid,
+    metrics = metric_set(roc_auc, accuracy),
+    control = control_stack_grid()
+    )
+
+rf_fit |>
+  collect_metrics() |>
+  print(width = Inf) |>
+  filter(.metric == "roc_auc") |>
+  ggplot(mapping = aes(x = trees, y = mean, color = factor(mtry))) +
+  geom_point() + 
+  # geom_line() + 
+  labs(x = "Num. of Trees", y = "CV AUC")+
+  scale_x_log10()
+
+best_rf <- rf_fit |>
+  select_best("roc_auc")
+best_rf
+
+# Final workflow
+final_rf_wf <- rf_wf |>
+  finalize_workflow(best_rf)
+
+# Fit the whole training set, then predict the test cases
+final_rf_fit <- 
+  final_rf_wf |>
+  last_fit(data_split)
+
+# Test metrics
+final_rf_fit |> 
+  collect_metrics()
+
+final_rf_fit |>
+  extract_fit_parsnip() |>
+  vip()
+
+saveRDS(rf_fit, "Random Forest.rds")
+```
