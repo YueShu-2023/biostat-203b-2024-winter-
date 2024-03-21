@@ -1,0 +1,221 @@
+---
+title: "Biostat 203B Homework 5- Stacking"
+subtitle: Due Mar 22 @ 11:59PM
+author: "Yue Shu, 106332516"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: false
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+---
+
+## Predicting ICU duration
+
+Using the ICU cohort `mimiciv_icu_cohort.rds` you built in Homework 4, develop at least three machine learning approaches (logistic regression with enet regularization, random forest, boosting, SVM, MLP, etc) plus a model stacking approach for predicting whether a patient's ICU stay will be longer than 2 days. You should use the `los_long` variable as the outcome. You algorithms can use patient demographic information (gender, age at ICU `intime`, marital status, race), ICU admission information (first care unit), the last lab measurements before the ICU stay, and first vital measurements during ICU stay as features. You are welcome to use any feature engineering techniques you think are appropriate; but make sure to not use features that are not available at an ICU stay's `intime`. For instance, `last_careunit` cannot be used in your algorithms. 
+
+1. Data preprocessing and feature engineering.
+
+2. Partition data into 50% training set and 50% test set. Stratify partitioning according to `los_long`. For grading purpose, sort the data by `subject_id`, `hadm_id`, and `stay_id` and use the seed `203` for the initial data split. Below is the sample code.
+```{r}
+#| eval: false
+set.seed(203)
+
+# sort
+mimic_icu_cohort <- mimic_icu_cohort |>
+  arrange(subject_id, hadm_id, stay_id)
+
+data_split <- initial_split(
+  mimiciv_icu_cohort, 
+  # stratify by los_long
+  strata = "los_long", 
+  prop = 0.5
+  )
+```
+
+3. Train and tune the models using the training set.
+
+4. Compare model classification performance on the test set. Report both the area under ROC curve and accuracy for each machine learning algorithm and the model stacking. Interpret the results. What are the most important features in predicting long ICU stays? How do the models compare in terms of performance and interpretability?
+
+**Answer:**
+
+```{r}
+library(GGally)
+library(gtsummary)
+library(tidyverse)
+library(tidymodels)
+library(glmnet)
+library(ranger)
+
+# load data
+mimic_icu_cohort <- readRDS("mimic_icu_cohort.rds")
+
+# data preprocessing
+mimic_icu_cohort <- mimic_icu_cohort %>%
+  mutate(los_long = ifelse(los > 2, "long", "short"))%>%
+  select(subject_id, hadm_id, stay_id,
+         first_careunit,gender,age_intime,
+         los_long,marital_status,race,
+         "Bicarbonate",Creatinine,
+         Potassium,Sodium,Chloride,
+         Hematocrit,"White Blood Cells",
+         Glucose,"Heart Rate","Respiratory Rate",
+         "Temperature Fahrenheit",
+         "Non Invasive Blood Pressure diastolic",
+         "Non Invasive Blood Pressure systolic")
+
+tbl_summary(mimic_icu_cohort,
+  by = los_long
+)
+```
+
+```{r}
+# split data
+set.seed(203)
+mimic_icu_cohort <- mimic_icu_cohort |>
+  arrange(subject_id, hadm_id, stay_id)
+
+data_split <- initial_split(
+  mimic_icu_cohort, 
+  strata = "los_long", 
+  prop = 0.5
+  )
+
+mimic_other <- training(data_split)
+dim(mimic_other)
+
+mimic_test <- testing(data_split)
+dim(mimic_test)
+```
+
+Stacking
+```{r}
+
+# Load libraries
+library(GGally)
+library(gtsummary)
+library(ranger)
+library(stacks)
+library(tidyverse)
+library(tidymodels)
+library(doParallel)
+
+
+logit_fit <- readRDS("logistic_regression_model.rds")
+rf_fit <- readRDS("Random Forest.rds")
+gb_fit <- readRDS("Boosting.rds")
+
+mimic_model_st <- 
+  stacks() |>
+  add_candidates(logit_fit) |>
+  add_candidates(rf_fit) |>
+  add_candidates(gb_fit) |>
+  blend_predictions(
+    penalty = 10^(-6:2),
+    metrics = c("roc_auc")
+  ) |>
+  fit_members()
+
+autoplot(mimic_model_st)
+
+autoplot(mimic_model_st, type = "weights")
+
+collect_parameters(mimic_model_st, "rf_fit")
+
+mimic_pred0 <- mimic_test %>%
+  bind_cols(predict(mimic_model_st, ., type = "prob")) %>%
+  print(width = Inf)
+
+mimic_pred0$los_long <- as.factor(mimic_pred0$los_long)
+
+yardstick::roc_auc(
+  mimic_pred0,
+  truth = los_long,
+  contains(".pred_long")
+  )
+
+mimic_pred0$predicted_class <- ifelse(as.numeric(as.character(mimic_pred0$.pred_long)) > 0.5, "long", "short")
+mimic_pred0$predicted_class <- factor(mimic_pred0$predicted_class, 
+                                      levels = c("long", "short"))
+yardstick::accuracy(
+  mimic_pred0,
+  truth = los_long,
+  estimate = predicted_class
+)
+
+```
+
+Finish:
+```{r}
+mimic_pred <-
+  mimic_test |>
+  select(los_long) |>
+  bind_cols(
+    predict(
+      mimic_model_st,
+      mimic_test,
+      type = "class",
+      members = TRUE
+      )
+    ) |>
+  print(width = Inf)
+
+
+map(
+  colnames(mimic_pred),
+  ~mean(mimic_pred$los_long == pull(mimic_pred, .x))
+  ) |>
+  set_names(colnames(mimic_pred)) |>
+  as_tibble() |>
+  pivot_longer(c(everything(), -los_long))
+```
+
+Summary
+
+The ROC and accuracy of logistic model is 0.603 and 0.577.
+The ROC and accuracy of random forest model is 0.642 and 0.605.
+The ROC and accuracy of boosting model is 0.642 and 0.602.
+The ROC and accuracy of stacking model is 0.646 and 0.607.
+
+From the ROC and accuracy, we can see that the stacking model has the best 
+performance. But random forest and boosting model also have good performance. 
+The logistic model has the worst performance.
+
+In logistic regression model, only Non Invasive Blood Pressure 
+systolic has importance than 2, that is because Non Invasive Blood Pressure 
+systolic is directly related to the patient's health condition. 
+The first careunit in MICU and SICU are the most serious care units, 
+meaning the patient's condtion is serious.
+
+In random forest model, the top three important features are 
+"Non Invasive Blood Pressure systolic", "White Blood Cells" and "Hematocrit". 
+The Non Invasive Blood Pressure systolic shows again, same reason as 
+logistic model. The White blood cells and Hematocrit are last available 
+measurement before the ICU stay, that is maybe because the patient's lab 
+can better show paitients' health condition. Some variables like "age intime" is
+also can be explained, because the older the patient, the more likely to have
+a long ICU stay. 
+
+In boosting model, the top three important features are "Non Invasive 
+Blood Pressure systolic", "age intime" and "White Blood Cells". It shows the 
+blood pressure's importance. Other variables are manily last lab results and 
+first vital measurement in ICU. 
+
+In all, logistic model has the worst performance and its important features are 
+really rare. For random forest and boosting model, the important features are 
+age_intime, last lab results and first vital measurement in ICU. But the three 
+model all put the Non Invasive Blood Pressure systolic as the most important. 
+
+In terms of performance and interpretability, the stacking model, which mainly 
+a mixture of random forest and boosting has the best metrics but is hard to 
+interpret. The random forest and boosting model have good metrics and can be 
+explained easily. The logistic model has the worst performance. So, I think the
+random forest and boosting model are the best choice for this problem. 
+
+
+
+
+

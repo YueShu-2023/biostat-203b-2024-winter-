@@ -1,0 +1,152 @@
+---
+title: "Biostat 203B Homework 5- Boosting"
+subtitle: Due Mar 22 @ 11:59PM
+author: "Yue Shu, 106332516"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: false
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+---
+
+**Answer:**
+
+```{r}
+library(GGally)
+library(gtsummary)
+library(tidyverse)
+library(tidymodels)
+library(glmnet)
+library(ranger)
+library(stacks)
+
+# load data
+mimic_icu_cohort <- readRDS("mimic_icu_cohort.rds")
+
+# data preprocessing
+mimic_icu_cohort <- mimic_icu_cohort %>%
+  mutate(los_long = ifelse(los > 2, "long", "short"))%>%
+ select(subject_id, hadm_id, stay_id,
+         first_careunit,gender,age_intime,
+         los_long,race,marital_status,
+         "Bicarbonate",Creatinine,
+         Potassium,Sodium,Chloride,
+         Hematocrit,"White Blood Cells",
+         Glucose,"Heart Rate","Respiratory Rate",
+         "Temperature Fahrenheit",
+         "Non Invasive Blood Pressure diastolic",
+         "Non Invasive Blood Pressure systolic")
+
+tbl_summary(mimic_icu_cohort,
+  by = los_long
+)
+```
+
+```{r}
+# split data
+set.seed(203)
+mimic_icu_cohort <- mimic_icu_cohort |>
+  arrange(subject_id, hadm_id, stay_id)
+
+data_split <- initial_split(
+  mimic_icu_cohort, 
+  strata = "los_long", 
+  prop = 0.5
+  )
+
+mimic_other <- training(data_split)
+dim(mimic_other)
+
+mimic_test <- testing(data_split)
+dim(mimic_test)
+```
+
+```{r}
+library(xgboost)
+library(vip)
+
+gb_recipe <- 
+  recipe(
+    los_long ~ ., 
+    data = mimic_other
+  ) |>
+  step_rm(subject_id, hadm_id, stay_id) |>
+  step_impute_mean("Non Invasive Blood Pressure diastolic",
+                   "Non Invasive Blood Pressure systolic")|>
+  step_impute_median("Temperature Fahrenheit",
+                     "Respiratory Rate",
+                     "Heart Rate")|>
+  step_impute_mode(marital_status)|>
+  step_impute_bag(Bicarbonate,Creatinine,
+                  Potassium,Sodium,Chloride,
+                  Glucose,Hematocrit,
+                  "White Blood Cells") |>
+  step_dummy(all_nominal_predictors()) |>
+  step_zv(all_numeric_predictors())
+
+gb_mod <- 
+  boost_tree(
+    mode = "classification",
+    trees = 1000, 
+    tree_depth = tune(),
+    learn_rate = tune()
+  ) |> 
+  set_engine("xgboost", importance = "weight")
+
+gb_wf <- workflow() |>
+  add_recipe(gb_recipe) |>
+  add_model(gb_mod)
+
+param_grid <- grid_regular(
+  tree_depth(range = c(1L, 3L)),
+  learn_rate(range = c(-3, 2), trans = log10_trans()),
+  levels = c(3, 10)
+  )
+
+set.seed(1)
+folds <- vfold_cv(mimic_other, v = 5)
+
+gb_fit <- gb_wf |>
+  tune_grid(
+    resamples = folds,
+    grid = param_grid,
+    metrics = metric_set(roc_auc, accuracy),
+    control = control_stack_grid()
+    )
+
+gb_fit |>
+  collect_metrics() |>
+  print(width = Inf) |>
+  filter(.metric == "roc_auc") |>
+  ggplot(mapping = aes(x = learn_rate, y = mean, color = factor(tree_depth))) +
+  geom_point() + 
+  labs(x = "Learning Rate", y = "CV AUC")+
+  scale_x_log10()
+
+best_gb <- gb_fit |>
+  select_best("roc_auc")
+best_gb
+
+# Final workflow
+final_gb_wf <- gb_wf |>
+  finalize_workflow(best_gb)
+
+# Fit the whole training set, then predict the test cases
+final_gb_fit <- 
+  final_gb_wf |>
+  last_fit(data_split)
+
+# Test metrics
+final_gb_fit |> 
+  collect_metrics()
+
+final_gb_fit |>
+  extract_fit_parsnip() |>
+  vip()
+
+saveRDS(gb_fit, "Boosting.rds")
+```
