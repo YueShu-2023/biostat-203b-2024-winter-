@@ -20,6 +20,8 @@ library(tidyverse)
 library(tidymodels)
 library(glmnet)
 library(ranger)
+library(stacks)
+library(vip)
 
 # load data
 mimic_icu_cohort <- readRDS("mimic_icu_cohort.rds")
@@ -29,8 +31,8 @@ mimic_icu_cohort <- mimic_icu_cohort %>%
   mutate(los_long = ifelse(los > 2, "long", "short"))%>%
   select(subject_id, hadm_id, stay_id,
          first_careunit,gender,age_intime,
-         los_long,admission_type,insurance,
-         marital_status,race,"Bicarbonate",Creatinine,
+         los_long,race,marital_status,
+         "Bicarbonate",Creatinine,
          Potassium,Sodium,Chloride,
          Hematocrit,"White Blood Cells",
          Glucose,"Heart Rate","Respiratory Rate",
@@ -56,7 +58,7 @@ data_split <- initial_split(
   )
 
 mimic_other <- training(data_split)
-str(mimic_other)
+dim(mimic_other)
 
 mimic_test <- testing(data_split)
 dim(mimic_test)
@@ -94,7 +96,7 @@ logit_wf <- workflow() |>
   print()
 
 param_grid <- grid_regular(
-  penalty(range = c(-6, 3)), 
+  penalty(range = c(-4, 2)), 
   mixture(),
   levels = c(100, 5)
   ) |>
@@ -107,7 +109,8 @@ logit_fit <- logit_wf |>
   tune_grid(
     resamples = folds,
     grid = param_grid,
-    metrics = metric_set(roc_auc, accuracy)
+    metrics = metric_set(roc_auc, accuracy),
+    control = control_stack_grid()
     )
 
 logit_fit |>
@@ -138,6 +141,10 @@ final_fit
 # Test metrics
 final_fit |> 
   collect_metrics()
+
+final_fit |>
+  extract_fit_parsnip() |>
+  vip()
 
 saveRDS(logit_fit,file = "logistic_regression_model.rds")
 ```
